@@ -3,11 +3,11 @@ title: Welcome to Boyang Yan's Website
 ---
 
 <div class="head-card">
-<img src="/img.jpg">
+<img src="./img.jpg">
 
 # Boyang Yan
 
-- **Phone:** [+1 (984) 298-9873]((tel:9842989873)) / [+86 18512290791](tel:+8618512290791) 
+- **Phone:** [+1 (984) 298-9873]((tel:+19842989873)) / [+86 18512290791](tel:+8618512290791) 
 - **Email:** [yanboyang713@gmail.com](mailto:yanboyang713@gmail.com)  
 - **Website:** [www.yanboyang.com](http://www.yanboyang.com)  
 - **GitHub:** [yanboyang713](https://github.com/yanboyang713)  
@@ -16,12 +16,12 @@ title: Welcome to Boyang Yan's Website
 ---
 
 ## Areas of Interest
-- Computer Networks
+- [Computer Networks](posts/2024-05-24-034608-networking)
 - Networked Systems
-- Anomaly Detection
+- [Anomaly Detection](posts/20230404190313-anomaly_detection)
 - Network Measurement
-- Cloud Computing
-- Time Series Analysis
+- [Cloud Computing](posts/2023-10-09-180437-cloud_computing)
+- [Time Series Analysis](posts/20230404184340-time_series)
 
 ---
 
@@ -130,9 +130,9 @@ I hold a Master’s degree in Statistics and Operations Research from the Royal 
 
 ### Programming Languages  
 - C/C++  
-- Rust  
-- Python  
-- R  
+- [Rust](posts/20230220230005-rust)
+- [Python](posts/20230404161934-python)
+- R
 - SAS  
 - Lisp  
 - Bash Scripting  

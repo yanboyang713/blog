@@ -1,0 +1,8 @@
+---
+title: "CNN-GRU-Attention"
+draft: false
+---
+
+## Reference List {#reference-list}
+
+1.  <https://mp.weixin.qq.com/s?__biz=MzkwMjYxODE4Mw==&mid=2247491658&idx=1&sn=6d4136f008400ee706b458f1f8528f14&chksm=c0a06d62f7d7e474d08f5856089b18036355fae1a5889738d625eb48ea5636daae5d55b67ed6&mpshare=1&scene=1&srcid=0804iEC9Lt1ImqA2bHgcuFyZ&sharer_shareinfo=1926ae80b001a3757e9fcf2f9e6eb9ed&sharer_shareinfo_first=1926ae80b001a3757e9fcf2f9e6eb9ed&exportkey=n_ChQIAhIQcqWUIzAjxyYky4hD3AUdYBKcAgIE97dBBAEAAAAAAAblEfGLXk4AAAAOpnltbLcz9gKNyK89dVj0mXrO1RvBdMbyZeMjNTWTZ0tN%2F5Es0MYypg5Vs5NsqeWqzCvLzTp7d0%2BamBcIBLDZfqSy2%2B%2BRGBDsolEXKV7I515nPsJ0tFBqNo%2BAICiV4Swwu6gD93Bgcu0Vm%2FDQZoQSHlQFcV9o37gK6qgZjqSArrUBN8pT9XNSW6YlAkJI5Q6QUiZ1c8LWOHlUAloGskhOgUKgM%2F2oY4pqzyg0FEDY5zKrmdNZRHqephNy88w9TFp0tDt1gtOPymxDjnoGcmoHeeRHQbVns%2B6dyO9WRpSPA4mNUc4FpgZUuI3nuiSEVYACor5Gb3PqpOhKnH54UsE5qIfcxJPP&acctmode=0&pass_ticket=lRtcDgiGIQ%2BRZoONfjZUDm%2BGBxy750bN94%2FW92p0mEShu57JcCjcm6%2BJ9VgiFnrZ&wx_header=0#rd>
