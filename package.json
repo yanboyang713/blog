@@ -109,14 +109,8 @@
     "@types/ws": "^8.18.0",
     "@types/yargs": "^17.0.33",
     "esbuild": "^0.25.2",
-<<<<<<< HEAD
-    "prettier": "^3.4.2",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
-=======
     "prettier": "^3.5.3",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
->>>>>>> upstream/v4
   }
 }
