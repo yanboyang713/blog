@@ -12,9 +12,7 @@ const config: QuartzConfig = {
     pageTitleSuffix: "",
     enableSPA: true,
     enablePopovers: true,
-    analytics: {
-      provider: "plausible",
-    },
+    analytics: { provider: 'google', tagId: 'G-E7HDV72X78' },
     locale: "en-US",
     baseUrl: "yanboyang.com",
     ignorePatterns: ["private", "templates", ".obsidian"],
