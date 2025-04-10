@@ -1,5 +1,5 @@
 ---
-title: "data centre infrastructure"
+title: "data center infrastructure"
 draft: false
 ---
 
