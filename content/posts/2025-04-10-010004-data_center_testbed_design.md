@@ -26,7 +26,7 @@ All Proxmox servers are part of a single Proxmox cluster (for ease of management
 
 ### Management Ethernet Switch (dedicated) {#management-ethernet-switch--dedicated}
 
-A dedicated management Ethernet switch connects the iDRAC out-of-band management ports of all servers on an isolated management network (for remote power/reset and monitoring).
+A dedicated management Ethernet switch connects the [Integrated Dell Remote Access Controller (iDRAC)]({{< relref "2025-03-19-000630-integrated_dell_remote_access_controller_idrac.md" >}}) out-of-band management ports of all servers on an isolated management network (for remote power/reset and monitoring).
 
 
 ### [spine-leaf architecture]({{< relref "2025-04-10-063517-spine_leaf_architecture.md" >}}) {#spine-leaf-architecture--2025-04-10-063517-spine-leaf-architecture-dot-md}
@@ -53,7 +53,7 @@ The research project will deploy [Aether 5G]({{< relref "2024-05-18-220246-aethe
 
 1.  The [BIND 9]({{< relref "2024-05-25-015638-bind_9.md" >}}) DNS VM provides the required DNS records for this cluster’s operation
 2.  The Kubernetes network (for pod communication) will be handled by an [Calico]({{< relref "20230609130541-calico.md" >}}), but that is separate from our physical topology – so, we require [BGP]({{< relref "20230608230531-bgp.md" >}})
-3.  Needs a load balancer to distribute traffic across all control plane nodes.
+3.  Needs a [Load Balancer]({{< relref "20230601231737-loadbalancer.md" >}}) to distribute traffic across all control plane nodes.
 
 
 ### Storage Network (Optional) {#storage-network--optional}

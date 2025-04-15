@@ -12,6 +12,7 @@ The next-generation wireless networks are evolving into very [Complex Systems]({
 -   [wireless sensor network (WSN)]({{< relref "20230327152952-wireless_sensor_network_wsn.md" >}})
 -   [Cellular Network]({{< relref "20230614221419-cellular_network.md" >}})
 -   [wifi]({{< relref "20230404170307-wifi.md" >}})
+-   [mesh network]({{< relref "2025-04-14-231123-mesh_network.md" >}})
 
 
 ## Frequency {#frequency}

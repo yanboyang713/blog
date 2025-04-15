@@ -1,7 +1,10 @@
 ---
-title: "Cisco Certified Network Associate (CCNA) certification"
+title: "Cisco Certification"
 draft: false
 ---
+
+## Cisco Certified Network Associate (CCNA) certification {#cisco-certified-network-associate--ccna--certification}
+
 
 ## Reference List {#reference-list}
 

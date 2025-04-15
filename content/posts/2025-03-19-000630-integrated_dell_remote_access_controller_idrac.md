@@ -3,7 +3,7 @@ title: "Integrated Dell Remote Access Controller (iDRAC)"
 draft: false
 ---
 
-## install an OS image using iDRAC {#install-an-os-image-using-idrac}
+## Install an OS image using iDRAC <span class="tag"><span class="iDRAC">iDRAC</span></span> {#install-an-os-image-using-idrac}
 
 <https://www.dell.com/support/kbdoc/en-us/000130160/how-to-install-the-operating-system-on-a-dell-poweredge-server-os-deployment>
 

@@ -264,7 +264,7 @@ If the environment is deterministic except for the actions of other agents, it i
 -   Should any single agent treat another agent as **an agent** or **part of the environment**?
 
 
-## Agents Programs {#agents-programs}
+## AI Agents Programs {#ai-agents-programs}
 
 
 ### Designing Agent Programs {#designing-agent-programs}
@@ -388,7 +388,11 @@ Currently, in many fields of AI, the idea of how to initiate the agent (make the
 
     Learning in intelligent agents can be summarized as the modification of agent’s behavior based on the available feedback information to improve the overall performance of the agent.
 
-    [Container Allocation in Cloud Environment Using Multi-Agent Deep Reinforcement Learning]({{< relref "2024-01-19-210752-container_allocation_in_cloud_environment_using_multi_agent_deep_reinforcement_learning.md" >}})
+
+### [AI agent frameworks]({{< relref "2025-04-11-010447-ai_agent_frameworks.md" >}}) {#ai-agent-frameworks--2025-04-11-010447-ai-agent-frameworks-dot-md}
+
+
+### [AI agent use case]({{< relref "2025-04-11-010822-ai_agent_use_case.md" >}}) {#ai-agent-use-case--2025-04-11-010822-ai-agent-use-case-dot-md}
 
 
 ## State Representations {#state-representations}

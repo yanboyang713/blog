@@ -5,6 +5,7 @@ draft: false
 
 [Debian]({{< relref "20230228044717-debian.md" >}})
 [ubuntu]({{< relref "20230220222545-ubuntu.md" >}})
+[RTOS]({{< relref "2024-07-10-052855-rtos.md" >}})
 
 
 ## Arch Linux {#arch-linux}
