@@ -72,6 +72,9 @@ If shared storage or [Ceph]({{< relref "20230107215132-ceph.md" >}}) is used for
 ### [Precision Time Protocol (PTP)]({{< relref "2024-05-20-050327-precision_time_protocol_ptp.md" >}}) Synchronization {#precision-time-protocol--ptp----2024-05-20-050327-precision-time-protocol-ptp-dot-md--synchronization}
 
 
+### [SmartNIC]({{< relref "2025-04-10-011945-smartnic.md" >}}) {#smartnic--2025-04-10-011945-smartnic-dot-md}
+
+
 ## Reference List {#reference-list}
 
 1.  [data center infrastructure]({{< relref "2024-05-16-232311-data_centre_infrastructure.md" >}})
