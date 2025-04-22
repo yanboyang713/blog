@@ -124,6 +124,8 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 import ollama
 ```
 
+[handle long text when doing extraction]({{< relref "2025-04-20-015209-handle_long_text_when_doing_extraction.md" >}})
+
 
 ## Reference List {#reference-list}
 
