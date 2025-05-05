@@ -14,6 +14,7 @@ title: Welcome to Boyang Yan's Website
 - **LinkedIn:** [boyang-yan-50a70763](https://www.linkedin.com/in/boyang-yan-50a70763)
 
 ---
+![](https://toppng.com/uploads/preview/horizontal-line-divider-png-11552244242ncmkkiynfn.png)
 
 ## Areas of Interest
 - [Computer Networks](posts/2024-05-24-034608-networking)
@@ -126,46 +127,46 @@ I hold a Master’s degree in Statistics and Operations Research from the Royal 
 - **Advisor:** Dr. George Zhou (Software Testing Lab)
 
 ---
-## Skills  
+## Skills
 
-### Programming Languages  
-- C/C++  
+### Programming Languages
+- [C/C++](posts/20230608221530-c)
 - [Rust](posts/20230220230005-rust)
 - [Python](posts/20230404161934-python)
-- R
+- [R](posts/20230622162146-r_language)
 - SAS  
 - Lisp  
 - Bash Scripting  
 
 ### Databases  
-- Relational Databases: PostgreSQL, MySQL, Oracle  
+- Relational Databases: [PostgreSQL](posts/20230220215653-postgre), MySQL, Oracle
 - NoSQL: MongoDB  
-- Key-Value Stores: Redis  
+- Key-Value Stores: [Redis](posts/2023-10-12-235342-redis)
 
-### Operating Systems  
-- Arch Linux  
-- Ubuntu  
-- Debian  
+### Operating Systems
+- [Arch Linux](posts/20230220222636-arch_linux)
+- [Ubuntu](posts/20230220222545-ubuntu)
+- [Debian](posts/20230228044717-debian)
 
-### Computer Networks/Cloud  
-- Cloud Platforms: Azure, AWS  
-- Openshift (Kubernetes)  
-- Open vSwitch (OVS)  
-- P4 (Programming Protocol-Independent Packet Processors)  
-- Transport Protocols: REST APIs, TCP/IP, gRPC  
+### Computer Networks/Cloud
+- Cloud Platforms: [Azure](posts/20230328005951-azure), [AWS](posts/20230314144515-aws)
+- Openshift ([Kubernetes](posts/20230105185343-kubernetes))
+- [Open vSwitch (OVS)](posts/2023-12-06-170847-open_vswitch_ovs)
+- P4 (Programming Protocol-Independent Packet Processors)
+- Transport Protocols: [REST APIs](posts/20230620161819-restful), TCP/IP, [gRPC](posts/2023-11-07-011240-grpc)
 
 ### Tools/Frameworks  
-- Network Simulation: NS3  
-- Version Control: Git  
-- Configuration Management: Ansible  
-- Infrastructure as Code (IaC): Terraform  
+- Network Simulation: [NS3](posts/20230105183742-ns3)
+- Version Control: [Git](posts/20230220223747-git)
+- Configuration Management: [Ansible](posts/2023-10-30-025244-ansible)
+- Infrastructure as Code (IaC): [Terraform](posts/2024-01-27-072055-terraform)
 
 ---
 
-## Publications  
+## Publications
 
-### Workload Prediction in P4 Programmable Switches  
-**arXiv preprint, 2024**  
+### Workload Prediction in P4 Programmable Switches
+**arXiv preprint, 2024**
 - Revised the decision tree (DT) to the Recursive Random Projection Regression (Kind of Binary Decision Tree - Own method), supports faster training, generates fewer rules and satisfies switch constraints better
 - Conducted comprehensive comparisons among six Hyperparameter Search methods (Random Search, Grid Search, Bayesian Optimization, Genetic Algorithms - using TPOT, SHERPA, and Optuna) to optimize my own Regression method
 - Benchmarked the Recursive Random Projection Regression against seven baselines (Vector Auto Regression, Support Vector Machines, Random Forest Regressor, Gradient Boosting Machine, Large Bayesian vector auto regression, explainable Boosted Linear Regression, and distribution enhanced linear regression), which demonstrated superior performance, particularly in scenarios involving P4 switches.
