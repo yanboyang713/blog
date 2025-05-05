@@ -14,7 +14,6 @@ title: Welcome to Boyang Yan's Website
 - **LinkedIn:** [boyang-yan-50a70763](https://www.linkedin.com/in/boyang-yan-50a70763)
 
 ---
-![](https://toppng.com/uploads/preview/horizontal-line-divider-png-11552244242ncmkkiynfn.png)
 
 ## Areas of Interest
 - [Computer Networks](posts/2024-05-24-034608-networking)
