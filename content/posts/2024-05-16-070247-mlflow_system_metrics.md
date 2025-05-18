@@ -3,7 +3,7 @@ title: "MLflow System Metrics"
 draft: false
 ---
 
-[MLFlow]({{< relref "2023-11-30-224657-mlflow.md" >}}) allows users to log system metrics including CPU stats, [GPU]({{< relref "2023-10-30-193539-gpu.md" >}}) stats, memory usage, network traffic, and disk usage during the execution of an MLflow run.
+[MLFlow]({{< relref "2023-11-30-224657-mlflow.md" >}}) allows users to log system metrics including CPU stats, [GPU]({{< relref "2023-10-30-193539-gpu.md" >}}) stats, memory usage, [networking measurement metrics]({{< relref "20230609162126-networking_measurement_metrics.md" >}}), and disk usage during the execution of an MLflow run.
 
 
 ## Extra Dependencies {#extra-dependencies}
