@@ -9,6 +9,57 @@ draft: false
 Point a web browser at <https://cloud.securew2.com/public/82116/limited/?device=Unknown> and follow the instructions there.
 ![](https://galileo.phys.virginia.edu/compfac/faq/new-cert-gen-1.png)
 
+Note that you’ll be asked to choose a passphrase for the certificate. The passphrase must be shorter than 15 characters. If you attempt to enter a longer passphrase, you’ll see a "passphrase invalid" message.
+![](https://galileo.phys.virginia.edu/compfac/faq/new-cert-gen-2.png)
+At the end, this process should download a file with a name ending in ".p12".
+
+
+## Get get the USHER Certificate: {#get-get-the-usher-certificate}
+
+Point a web browser at <https://discovery.phys.virginia.edu/compfac/faq/ca.pem> and download a file named "ca.pem".
+
+```bash
+wget https://discovery.phys.virginia.edu/compfac/faq/ca.pem -O ca.pem
+```
+
+
+## Configure Your Eduroam Connection {#configure-your-eduroam-connection}
+
+Click the network icon (nm-applet) on your task bar. Configure your Eduroam connection as shown here.
+
+```file
+
+*Warning* You might need to put your p12 file into both the "User Certificate" and "Private Key" fields to make the other fields available, or to make it possible to save the configuration.
+
+Note other caveats below the figure:
+[[https://galileo.phys.virginia.edu/compfac/faq/eduroam-wifi-config-dialog.png]]
+
+Your "identity" should be in the form mst3k@virginia.edu. Note that all letters must be in lower case.
+
+The "password" should be the passphrase you entered when you created your certificate, above.
+
+Save your changes.
+```
+
+
+## wahoo {#wahoo}
+
+```file
+Only iOS, Android, macOS and Windows devices can run the Network Setup Tool and connect to the eduroam wireless network. Other devices, such as game consoles (e.g., PlayStation 4, Playstation 5, Xbox One, Xbox Series ), streaming video players (e.g., Roku, Apple TV, Chromecast, Smart TVs, and Boxee Box), Linux computers (i.e. Ubuntu, Mint), and voice assistants (Amazon Alexa, Google Home, etc) must connect to the wahoo wireless network. UVA Information Technology Services (ITS) does not support these devices and provides instructions only as a courtesy.
+
+Instructions for connecting to wahoo are at https://in.virginia.edu/wahoo
+*NOTE*:
++ Be aware that wahoo is a hidden wireless network whose network name does not display in available wireless network lists and must be typed in.
++ Devices will need to be completely powered down and restarted after registration to connect to wahoo.
++ You may want to register your device from a computer. Note that you will need the console or streaming device's MAC (Hardware) Address to do this and set the wireless flag to "Yes" on the Network Registration page at https://netreg.itc.virginia.edu (requires a UVA VPN - More Secure or UVAnywhere or More Secure).
++ Be sure to select "Yes" for "This is a wireless device" on the Network Registration page.
++ You can check/change this setting after registering your device by logging into NetReg, selecting "View and edit existing device registrations", selecting your device by clicking on the MAC address link, and looking at the "Wireless device" setting.
+```
+
+```bash
+nmcli c up "wahoo"
+```
+
 
 ## Reference List {#reference-list}
 
