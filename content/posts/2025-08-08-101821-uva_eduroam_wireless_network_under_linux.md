@@ -61,6 +61,88 @@ nmcli c up "wahoo"
 ```
 
 
+### Enable autoconnect retries {#enable-autoconnect-retries}
+
+This tells NetworkManager to try again quickly after a disconnect:
+
+```bash
+nmcli connection modify "wahoo" connection.autoconnect yes
+nmcli connection modify "wahoo" connection.autoconnect-retries 0
+```
+
+0 here means “retry forever.” If you want a limit, use a positive number.
+
+
+### Increase its priority {#increase-its-priority}
+
+```bash
+nmcli connection modify "wahoo" connection.autoconnect-priority 10
+```
+
+
+### Lower ping timeout so NM detects drops faster {#lower-ping-timeout-so-nm-detects-drops-faster}
+
+NetworkManager setting that makes it detect a network drop sooner, so it can reconnect faster.
+Specifically:
+
+-   The property is connection.ip-ping-timeout.
+-   When set, NetworkManager will send ICMP pings to the gateway (or configured IP) to verify the connection.
+-   If the pings fail for the duration you set (in seconds), NM will mark the connection as down and trigger an immediate reconnect attempt.
+
+A) Use your gateway (recommended):
+
+```bash
+nmcli connection modify "wahoo" ipv4.may-fail no
+```
+
+```bash
+GW="$(nmcli -g IP4.GATEWAY connection show "wahoo")"
+nmcli connection modify "wahoo" connection.ip-ping-addresses "$GW" connection.ip-ping-timeout 10
+```
+
+B) Use public IP(s) (only if ICMP isn’t blocked):
+
+```bash
+nmcli connection modify "wahoo" \
+  connection.ip-ping-addresses 1.1.1.1,8.8.8.8 \
+  connection.ip-ping-timeout 10
+```
+
+Then reactivate the connection so it takes effect:
+
+```bash
+nmcli connection down "wahoo" && nmcli connection up "wahoo"
+```
+
+means:
+If "wahoo" loses connectivity and the pings fail for 10 seconds,
+NetworkManager won’t wait for higher-level timeouts — it will declare the connection dead and reconnect right away.
+By default, this is usually disabled (0), meaning NM waits for the interface’s own link detection or DHCP failure, which can be slow (sometimes 30–60+ seconds).
+
+
+#### When to use it {#when-to-use-it}
+
+-   On Wi-Fi connections: useful if the AP drops but the interface still thinks it’s “connected.”
+-   On VPN connections: helps detect when the tunnel silently breaks.
+
+
+#### Caveats {#caveats}
+
+-   It adds a bit of extra ping traffic.
+-   If your network blocks ICMP, NM might think it’s always down — so only use it if pings are allowed.
+
+
+### Make it persistent across sleep/wake cycles {#make-it-persistent-across-sleep-wake-cycles}
+
+If you suspend your machine, NetworkManager will try to reconnect on wake — but if you want to be aggressive:
+
+```bash
+nmcli connection modify "wahoo" connection.lldp disable
+```
+
+This avoids LLDP detection delays that sometimes slow Wi-Fi reconnects.
+
+
 ## Reference List {#reference-list}
 
 1.  <https://galileo.phys.virginia.edu/compfac/faq/linux-eduroam.html>
