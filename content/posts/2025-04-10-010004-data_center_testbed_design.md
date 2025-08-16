@@ -27,6 +27,53 @@ All Proxmox servers are part of a single Proxmox cluster (for ease of management
 ### Management Ethernet Switch (dedicated) {#management-ethernet-switch--dedicated}
 
 A dedicated management Ethernet switch connects the [Integrated Dell Remote Access Controller (iDRAC)]({{< relref "2025-03-19-000630-integrated_dell_remote_access_controller_idrac.md" >}}) out-of-band management ports of all servers on an isolated management network (for remote power/reset and monitoring).
+[MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) L009UiGS-2HaxD-IN
+FCC ID: TV7L0092AXIN
+IC: 7442A-L0092AXIN
+SN: HFC092SVAWD/345
+WIFI MAC: 78:9A:18:B6:B0:B5
+IP: 192.168.88.1/24
+MASK: 255.255.255.0
+
+[MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) L009UiGS-RM
+SN: HFE097YP05K/346
+
+WAN IP: 192.168.88.2/24
+MASK: 255.255.255.0
+DNS:8.8.8.8;8.8.4.4
+
+LAN: 192.168.1.1/24
+MASK: 255.255.255.0
+
+DIY server:
+Hostname: server1.testbed.com
+192.168.1.11/24
+Gateway: 192.168.1.1
+DNS: 192.168.1.1
+
+T470s:
+Hostname: server2.testbed.com
+192.168.1.12/24
+Gateway: 192.168.1.1
+DNS: 192.168.1.1
+
+T420s:
+Hostname: server3.testbed.com
+192.168.1.13/24
+Gateway: 192.168.1.1
+DNS: 192.168.1.1
+
+GPU pc:
+Hostname: server4.testbed.com
+192.168.1.14/24
+Gateway: 192.168.1.1
+DNS: 192.168.1.1
+
+Dell R730 Server:
+Hostname: server5.testbed.com
+192.168.1.15/24
+Gateway: 192.168.1.1
+DNS: 192.168.1.1
 
 
 ### [spine-leaf architecture]({{< relref "2025-04-10-063517-spine_leaf_architecture.md" >}}) {#spine-leaf-architecture--2025-04-10-063517-spine-leaf-architecture-dot-md}

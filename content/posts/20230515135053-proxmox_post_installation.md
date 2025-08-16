@@ -9,9 +9,7 @@ draft: false
 ## Run tteck's Proxmox VE Helper-Scripts for post PVE install {#run-tteck-s-proxmox-ve-helper-scripts-for-post-pve-install}
 
 ```bash
-wget https://raw.githubusercontent.com/tteck/Proxmox/main/misc/post-pve-install.sh
-chmod a+x post-pve-install.sh
-./post-pve-install.sh
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/pve/post-pve-install.sh)"
 ```
 
 
@@ -22,3 +20,8 @@ chmod a+x post-pve-install.sh
 
 
 ## [vGPU unblock]({{< relref "20230518175629-vgpu_unblock.md" >}}) {#vgpu-unblock--20230518175629-vgpu-unblock-dot-md}
+
+
+## Reference List {#reference-list}
+
+1.  <https://community-scripts.github.io/ProxmoxVE/scripts?id=post-pve-install>
