@@ -44,17 +44,18 @@ Save your changes.
 
 ## wahoo {#wahoo}
 
-```file
-Only iOS, Android, macOS and Windows devices can run the Network Setup Tool and connect to the eduroam wireless network. Other devices, such as game consoles (e.g., PlayStation 4, Playstation 5, Xbox One, Xbox Series ), streaming video players (e.g., Roku, Apple TV, Chromecast, Smart TVs, and Boxee Box), Linux computers (i.e. Ubuntu, Mint), and voice assistants (Amazon Alexa, Google Home, etc) must connect to the wahoo wireless network. UVA Information Technology Services (ITS) does not support these devices and provides instructions only as a courtesy.
+Only iOS, Android, macOS and Windows devices can run the Network Setup Tool and connect to the eduroam wireless network. Other devices, such as game console, streaming video players, Linux computers, and voice assistants must connect to the wahoo wireless network. UVA Information Technology Services (ITS) does not support these devices and provides instructions only as a courtesy.
 
-Instructions for connecting to wahoo are at https://in.virginia.edu/wahoo
-*NOTE*:
-+ Be aware that wahoo is a hidden wireless network whose network name does not display in available wireless network lists and must be typed in.
-+ Devices will need to be completely powered down and restarted after registration to connect to wahoo.
-+ You may want to register your device from a computer. Note that you will need the console or streaming device's MAC (Hardware) Address to do this and set the wireless flag to "Yes" on the Network Registration page at https://netreg.itc.virginia.edu (requires a UVA VPN - More Secure or UVAnywhere or More Secure).
-+ Be sure to select "Yes" for "This is a wireless device" on the Network Registration page.
-+ You can check/change this setting after registering your device by logging into NetReg, selecting "View and edit existing device registrations", selecting your device by clicking on the MAC address link, and looking at the "Wireless device" setting.
-```
+Instructions for connecting to wahoo are at [https://in.virginia.edu/wahoo](https://in.virginia.edu/wahoo)
+**NOTE**:
+
+-   Be aware that wahoo is a hidden wireless network whose network name does not display in available wireless network lists and must be typed in.
+-   Devices will need to be completely powered down and restarted after registration to connect to wahoo.
+-   You may want to register your device from a computer. Note that you will need the console or streaming device's MAC (Hardware) Address to do this and set the wireless flag to "Yes" on the Network Registration page at <https://netreg.itc.virginia.edu> (requires a UVA VPN - More Secure or UVAnywhere or More Secure).
+-   Be sure to select "Yes" for "This is a wireless device" on the Network Registration page.
+-   You can check/change this setting after registering your device by logging into NetReg, selecting "View and edit existing device registrations", selecting your device by clicking on the MAC address link, and looking at the "Wireless device" setting.
+
+<!--listend-->
 
 ```bash
 nmcli c up "wahoo"

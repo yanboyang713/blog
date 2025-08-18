@@ -1,46 +1,30 @@
 ---
-title: "RouterOS port forward from LAN to WAN"
+title: "RouterOS Port Forward from LAN to WAN"
 date: 2025-08-15
 draft: false
 ---
 
 For example, forward WAN port 8006 to LAN server 192.168.1.11:8006 WAN port name WAN
 
-1.  Make sure ether1 is in the WAN list:
 
-<!--listend-->
-
-```bash
-/interface list add name=WAN comment="WAN uplinks"  ;# (skip if it already exists)
-/interface list member add list=WAN interface=ether1
-```
-
-1.  Reference the list in your rules:
-
-<!--listend-->
+## Forward WAN:8006 → Server:8006 {#forward-wan-8006-server-8006}
 
 ```bash
-# DNAT
-/ip firewall nat add chain=dstnat in-interface-list=WAN protocol=tcp dst-port=8006 \
+/ip firewall nat add chain=dstnat \
+  in-interface-list=WAN \
+  protocol=tcp dst-port=8006 \
   action=dst-nat to-addresses=192.168.1.11 to-ports=8006
-
-# Allow the forwarded traffic (for any dst-nat)
-/ip firewall filter add chain=forward connection-nat-state=dstnat action=accept
 ```
 
-1.  (Optional) General src-NAT / masquerade for outbound
 
-If you don’t already have it:
+## Allow traffic {#allow-traffic}
 
-```bash
-/ip firewall nat add chain=srcnat out-interface-list=WAN action=masquerade
-```
-
-1.  (Optional) Hairpin NAT (LAN clients hitting your public IP)
-
-Replace &lt;bridge&gt; with your actual bridge name (often bridge):
+[firewall]({{< relref "20230404162828-firewall.md" >}})
 
 ```bash
-/ip firewall nat add chain=srcnat src-address=192.168.1.0/24 dst-address=192.168.1.11 \
-  out-interface=<bridge> action=masquerade
+/ip firewall filter add chain=forward \
+  in-interface-list=WAN \
+  dst-address=192.168.1.11 \
+  protocol=tcp dst-port=8006 \
+  action=accept
 ```

@@ -27,15 +27,35 @@ All Proxmox servers are part of a single Proxmox cluster (for ease of management
 ### Management Ethernet Switch (dedicated) {#management-ethernet-switch--dedicated}
 
 A dedicated management Ethernet switch connects the [Integrated Dell Remote Access Controller (iDRAC)]({{< relref "2025-03-19-000630-integrated_dell_remote_access_controller_idrac.md" >}}) out-of-band management ports of all servers on an isolated management network (for remote power/reset and monitoring).
-[MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) L009UiGS-2HaxD-IN
+
+
+### [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) cAP ax {#mikrotik--20230226101927-mikrotik-dot-md--cap-ax}
+
+ID: cAPGi-5HaxD2HaxD-US
+FCC ID: TV7CPG52X
+IC: 7442A-CAPAX
+Eth MAC: 78:9A:18:59:78:80
+WIFI1(5.8Ghz) MAC: 78:9A:18:59:78:83
+WIFI2(2.4Ghz) MAC: 78:9A:18:59:78:82
+SN: HF2098EMRR7/343/US
+
+Set as WAN for L009UiGS-2HaxD-IN
+[add AP to CAPsMAN]({{< relref "2024-03-11-134846-add_ap_to_capsman.md" >}})
+
+
+### [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) L009UiGS-2HaxD-IN {#mikrotik--20230226101927-mikrotik-dot-md--l009uigs-2haxd-in}
+
 FCC ID: TV7L0092AXIN
 IC: 7442A-L0092AXIN
 SN: HFC092SVAWD/345
-WIFI MAC: 78:9A:18:B6:B0:B5
+Integration WIFI MAC: 78:9A:18:B6:B0:B5
 IP: 192.168.88.1/24
 MASK: 255.255.255.0
+[Port Forward]({{< relref "2025-08-15-212717-routeros_port_forward_from_lan_to_wan.md" >}}) 192.168.88.2/24 port 8006 to WAN
 
-[MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) L009UiGS-RM
+
+### [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) L009UiGS-RM {#mikrotik--20230226101927-mikrotik-dot-md--l009uigs-rm}
+
 SN: HFE097YP05K/346
 
 WAN IP: 192.168.88.2/24
@@ -45,31 +65,43 @@ DNS:8.8.8.8;8.8.4.4
 LAN: 192.168.1.1/24
 MASK: 255.255.255.0
 
-DIY server:
+[Port Forward]({{< relref "2025-08-15-212717-routeros_port_forward_from_lan_to_wan.md" >}}) 192.168.1.11/24 port 8006 to WAN
+
+
+### DIY server {#diy-server}
+
 Hostname: server1.testbed.com
 192.168.1.11/24
 Gateway: 192.168.1.1
 DNS: 192.168.1.1
 
-T470s:
+
+### T470s {#t470s}
+
 Hostname: server2.testbed.com
 192.168.1.12/24
 Gateway: 192.168.1.1
 DNS: 192.168.1.1
 
-T420s:
+
+### T420s {#t420s}
+
 Hostname: server3.testbed.com
 192.168.1.13/24
 Gateway: 192.168.1.1
 DNS: 192.168.1.1
 
-GPU pc:
+
+### GPU PC {#gpu-pc}
+
 Hostname: server4.testbed.com
 192.168.1.14/24
 Gateway: 192.168.1.1
 DNS: 192.168.1.1
 
-Dell R730 Server:
+
+### Dell R730 Server {#dell-r730-server}
+
 Hostname: server5.testbed.com
 192.168.1.15/24
 Gateway: 192.168.1.1
