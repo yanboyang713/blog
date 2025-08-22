@@ -16,7 +16,10 @@ One server also provides WAN connectivity through a [VyOS]({{< relref "2025-04-1
 
 ## Physical Topology and Components {#physical-topology-and-components}
 
-{{< figure src="https://res.cloudinary.com/dkvj6mo4c/image/upload/v1744289068/Data_Center_Testbed_uss7bx.png" >}}
+{{< figure src="https://res.cloudinary.com/dkvj6mo4c/image/upload/v1755893142/UVA/testbed_xubcqc.png" >}}
+
+
+### Management Parts {#management-parts}
 
 
 ### [Proxmox VE]({{< relref "20230228043925-proxmox_ve.md" >}}) {#proxmox-ve--20230228043925-proxmox-ve-dot-md}
@@ -31,6 +34,8 @@ A dedicated management Ethernet switch connects the [Integrated Dell Remote Acce
 
 ### [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) cAP ax {#mikrotik--20230226101927-mikrotik-dot-md--cap-ax}
 
+<https://172.27.135.44:8006/>
+
 ID: cAPGi-5HaxD2HaxD-US
 FCC ID: TV7CPG52X
 IC: 7442A-CAPAX
@@ -39,69 +44,14 @@ WIFI1(5.8Ghz) MAC: 78:9A:18:59:78:83
 WIFI2(2.4Ghz) MAC: 78:9A:18:59:78:82
 SN: HF2098EMRR7/343/US
 
-cAP ax act as a Wi-Fi client (station) to the hidden “wahoo” SSID, grab an IP via DHCP on that link, NAT your LAN out over it, and keep your Ethernet ports in a lan bridge that goes to the cAPGi switch.
+WIFI1 act as a Wi-Fi client (station) to the hidden “[wahoo]({{< relref "2025-08-08-101821-uva_eduroam_wireless_network_under_linux.md#wahoo" >}})” SSID, grab an IP via UVA WIFI network's DHCP server(current IP: 172.27.135.44) on that link.
+bridge connect ether1, ether2, and WIFI2 as LAN.
+bridge IP: 192.168.88.1/24
+NAT made between WIFI1 and bridge.
+Port forward 192.168.88.2:8006 to WAN (WIFI1).
+WIFI2 as LAN wifi, ssid (myLAN).
 
-
-#### Build the LAN side {#build-the-lan-side}
-
-```bash
-  # Create the LAN bridge
-/interface/bridge add name=lan protocol-mode=rstp
-
-# Put your Ethernet uplink to the switch into the LAN bridge (adjust ports as needed)
-/interface/bridge/port
-add bridge=lan interface=ether1
-```
-
-
-#### Give the LAN an IP + DHCP server {#give-the-lan-an-ip-plus-dhcp-server}
-
-```bash
-# Give the router a LAN IP and a small DHCP server (optional but typical)
-# Use the subnet you like; 192.168.88.0/24 shown here
-/ip address add address=192.168.88.1/24 interface=lan
-/ip pool add name=dhcp_pool_lan ranges=192.168.88.10-192.168.88.254
-/ip dhcp-server add name=dhcp_lan interface=lan address-pool=dhcp_pool_lan
-/ip dhcp-server network add address=192.168.88.0/24 gateway=192.168.88.1 dns-server=192.168.88.1
-/ip dhcp-server enable dhcp_lan
-```
-
-
-#### Configure Wi-Fi station to wahoo (open, hidden) {#configure-wi-fi-station-to-wahoo--open-hidden}
-
-```bash
-/interface/wifi set wifi1 ssid="wahoo" mode=station disabled=no
-```
-
-
-#### Get WAN IP via DHCP on wifi1 {#get-wan-ip-via-dhcp-on-wifi1}
-
-```bash
-/ip/dhcp-client add interface=wifi1 use-peer-dns=yes add-default-route=yes
-```
-
-
-#### NAT + basic firewall {#nat-plus-basic-firewall}
-
-```bash
-  /interface/list add name=WAN
-/interface/list/member add list=WAN interface=wifi1
-
-/ip/firewall/nat
-add chain=srcnat out-interface-list=WAN action=masquerade comment="WAN via wahoo"
-
-/ip/firewall/filter
-add chain=input action=accept connection-state=established,related
-add chain=input action=accept in-interface=lan comment="manage from LAN"
-add chain=input action=drop in-interface-list=WAN comment="drop unsolicited from WAN"
-
-add chain=forward action=accept connection-state=established,related
-add chain=forward action=accept in-interface=lan out-interface-list=WAN
-add chain=forward action=drop
-
-```
-
-[add AP to CAPsMAN]({{< relref "2024-03-11-134846-add_ap_to_capsman.md" >}})
+[cAP ax setup details (step by step)]({{< relref "2025-08-21-125051-cap_ax_setup_details_step_by_step.md" >}})
 
 
 ### [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) L009UiGS-2HaxD-IN {#mikrotik--20230226101927-mikrotik-dot-md--l009uigs-2haxd-in}
@@ -110,8 +60,7 @@ FCC ID: TV7L0092AXIN
 IC: 7442A-L0092AXIN
 SN: HFC092SVAWD/345
 Integration WIFI MAC: 78:9A:18:B6:B0:B5
-IP: 192.168.88.1/24
-MASK: 255.255.255.0
+Get IP from cAP ax
 [Port Forward]({{< relref "2025-08-15-212717-routeros_port_forward_from_lan_to_wan.md" >}}) 192.168.88.2/24 port 8006 to WAN
 
 

@@ -1,5 +1,5 @@
 ---
-title: "UVA Eduroam Wireless Network Under Linux"
+title: "UVA Wireless Network Connection"
 date: 2025-08-08
 draft: false
 ---
