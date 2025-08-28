@@ -19,20 +19,10 @@ One server also provides WAN connectivity through a [VyOS]({{< relref "2025-04-1
 {{< figure src="https://res.cloudinary.com/dkvj6mo4c/image/upload/v1755893142/UVA/testbed_xubcqc.png" >}}
 
 
-### Management Parts {#management-parts}
+### Devices Management Parts {#devices-management-parts}
 
 
-### [Proxmox VE]({{< relref "20230228043925-proxmox_ve.md" >}}) {#proxmox-ve--20230228043925-proxmox-ve-dot-md}
-
-All Proxmox servers are part of a single Proxmox cluster (for ease of management, enabling features like VM live migration across servers). They share the management network for cluster coordination. VMs on any server can reach VMs on another server via the switch.
-
-
-### Management Ethernet Switch (dedicated) {#management-ethernet-switch--dedicated}
-
-A dedicated management Ethernet switch connects the [Integrated Dell Remote Access Controller (iDRAC)]({{< relref "2025-03-19-000630-integrated_dell_remote_access_controller_idrac.md" >}}) out-of-band management ports of all servers on an isolated management network (for remote power/reset and monitoring).
-
-
-### [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) cAP ax {#mikrotik--20230226101927-mikrotik-dot-md--cap-ax}
+#### [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) cAP ax {#mikrotik--20230226101927-mikrotik-dot-md--cap-ax}
 
 <https://172.27.135.44:8006/>
 
@@ -54,7 +44,7 @@ WIFI2 as LAN wifi, ssid (myLAN).
 [cAP ax setup details (step by step)]({{< relref "2025-08-21-125051-cap_ax_setup_details_step_by_step.md" >}})
 
 
-### [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) L009UiGS-2HaxD-IN {#mikrotik--20230226101927-mikrotik-dot-md--l009uigs-2haxd-in}
+#### [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) L009UiGS-2HaxD-IN {#mikrotik--20230226101927-mikrotik-dot-md--l009uigs-2haxd-in}
 
 FCC ID: TV7L0092AXIN
 IC: 7442A-L0092AXIN
@@ -62,6 +52,19 @@ SN: HFC092SVAWD/345
 Integration WIFI MAC: 78:9A:18:B6:B0:B5
 Get IP from cAP ax
 [Port Forward]({{< relref "2025-08-15-212717-routeros_port_forward_from_lan_to_wan.md" >}}) 192.168.88.2/24 port 8006 to WAN
+
+
+#### Management Ethernet Switch (dedicated) {#management-ethernet-switch--dedicated}
+
+A dedicated management Ethernet switch connects the [Integrated Dell Remote Access Controller (iDRAC)]({{< relref "2025-03-19-000630-integrated_dell_remote_access_controller_idrac.md" >}}) out-of-band management ports of all servers on an isolated management network (for remote power/reset and monitoring).
+
+
+### Masters Nodes Management Parts {#masters-nodes-management-parts}
+
+
+#### [Proxmox VE]({{< relref "20230228043925-proxmox_ve.md" >}}) {#proxmox-ve--20230228043925-proxmox-ve-dot-md}
+
+All Proxmox servers are part of a single Proxmox cluster (for ease of management, enabling features like VM live migration across servers). They share the management network for cluster coordination. VMs on any server can reach VMs on another server via the switch.
 
 
 ### [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) L009UiGS-RM {#mikrotik--20230226101927-mikrotik-dot-md--l009uigs-rm}
@@ -116,6 +119,9 @@ Hostname: server5.testbed.com
 192.168.1.15/24
 Gateway: 192.168.1.1
 DNS: 192.168.1.1
+
+
+### Works Nodes Parts {#works-nodes-parts}
 
 
 ### [spine-leaf architecture]({{< relref "2025-04-10-063517-spine_leaf_architecture.md" >}}) {#spine-leaf-architecture--2025-04-10-063517-spine-leaf-architecture-dot-md}

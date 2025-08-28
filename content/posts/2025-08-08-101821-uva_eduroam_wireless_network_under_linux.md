@@ -4,7 +4,13 @@ date: 2025-08-08
 draft: false
 ---
 
-## Get a Personal Certificate: {#get-a-personal-certificate}
+[University of Virginia]({{< relref "2025-04-11-013919-university_of_virginia.md" >}}) have two wifi networks, eduroam and wahoo.
+
+
+## Eduroam {#eduroam}
+
+
+### Get a Personal Certificate: {#get-a-personal-certificate}
 
 Point a web browser at <https://cloud.securew2.com/public/82116/limited/?device=Unknown> and follow the instructions there.
 ![](https://galileo.phys.virginia.edu/compfac/faq/new-cert-gen-1.png)
@@ -14,7 +20,7 @@ Note that you’ll be asked to choose a passphrase for the certificate. The pass
 At the end, this process should download a file with a name ending in ".p12".
 
 
-## Get get the USHER Certificate: {#get-get-the-usher-certificate}
+### Get get the USHER Certificate: {#get-get-the-usher-certificate}
 
 Point a web browser at <https://discovery.phys.virginia.edu/compfac/faq/ca.pem> and download a file named "ca.pem".
 
@@ -23,7 +29,7 @@ wget https://discovery.phys.virginia.edu/compfac/faq/ca.pem -O ca.pem
 ```
 
 
-## Configure Your Eduroam Connection {#configure-your-eduroam-connection}
+### Configure Your Eduroam Connection {#configure-your-eduroam-connection}
 
 Click the network icon (nm-applet) on your task bar. Configure your Eduroam connection as shown here.
 
