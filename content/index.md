@@ -26,13 +26,18 @@ title: Welcome to Boyang Yan's Website
 ---
 
 ## Summary
-I have a broad range of research interests, spanning computer networks and distributed systems, with a focus on network measurement, anomaly detection, and cloud computing. My work aims to enhance the observability, performance, and reliability of modern networked systems. I design and implement tools for real-world network analysis, troubleshooting, and optimization. My recent research involves programmable networking, workload prediction in P4 switches, and scalable network monitoring architectures.
+My research spans computer networks and distributed systems, with a focus on network measurement, anomaly detection, and cloud computing. I aim to improve the observability, performance, and reliability of modern networked systems. Currently, I’m exploring AIOps powered by large language models (LLMs) and building tools for real-world network analysis, troubleshooting, and optimization. Recent projects include programmable networking, workload prediction on P4-programmable switches, and scalable network-monitoring architectures.
 
-I hold a Master’s degree in Statistics and Operations Research from the Royal Melbourne Institute of Technology (RMIT), Australia, and a Bachelor’s degree in Computer Science from the University of Wollongong, Australia. I have a strong background in network systems engineering, reinforced by hands-on experience in cloud infrastructure, time-series analysis, and software-defined networking. Before joining academia, I worked in the industry, contributing to cloud platforms and network function virtualization.
+I hold a Master’s degree in Statistics and Operations Research from RMIT University (Royal Melbourne Institute of Technology), Australia, and a Bachelor’s degree in Computer Science from the University of Wollongong, Australia. I bring a strong background in network systems engineering, reinforced by hands-on experience in cloud infrastructure, time-series analysis, and software-defined networking. Prior to academia, I worked in industry on Azure cloud platforms and network function virtualization.
 
 ---
 
 ## Education
+### University of Virginia, Charlottesville, Virginia, USA
+**Ph.D. in Computer Science** (Full-time)  
+*Aug, 2025 - Now*  
+- Coursework: Serverless, Datacenter Network Infrastructure
+
 ### North Carolina State University, Raleigh, NC, USA  
 **Ph.D. in Computer Science (Non-degree)** (Full-time)  
 *Aug, 2023 - Nov, 2024*  
