@@ -28,3 +28,8 @@ Steps
 2.  Click Boot Option Settings &gt; Boot Sequence.
 3.  Use the arrow keys to select a boot device, and use the plus (+) and minus (-) sign keys to move the device down or up in the order.
 4.  Click Exit, and then click Yes to save the settings on exit.
+
+
+## Reference List {#reference-list}
+
+1.  <https://www.qizhecai.com/cs6501-fall25/>
