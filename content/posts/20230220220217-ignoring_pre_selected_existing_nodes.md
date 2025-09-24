@@ -1,5 +1,5 @@
 ---
-title: "Ignoring pre-selected existing nodes"
+title: "Ignoring pre-selected existing nodes (org roam)"
 draft: false
 ---
 

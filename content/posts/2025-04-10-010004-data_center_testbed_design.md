@@ -96,6 +96,15 @@ Hostname: server2.testbed.com
 Gateway: 192.168.1.1
 DNS: 192.168.1.1
 
+WI-FI card:
+
+-   description: Wireless interface
+-   product: Wireless 8260
+-   vendor: Intel Corporation
+-   bus info: pci@0000:3a:00.0
+-   logical name: wlp58s0
+-   serial: 14:ab:c5:8f:ab:f6
+
 
 ### T420s {#t420s}
 
@@ -103,6 +112,18 @@ Hostname: server3.testbed.com
 192.168.1.13/24
 Gateway: 192.168.1.1
 DNS: 192.168.1.1
+
+3G card:
+
+-   logical name: wwp0s29u1u4
+-   serial: ba:49:c2:37:84:ee
+
+WIFI card:
+
+-   Centrino Advanced-N 6205 [Taylor Peak]
+-   vendor: Intel Corporation
+-   logical name: wlp3s0
+-   serial: a0:88:b4:75:2a:50
 
 
 ### GPU PC {#gpu-pc}
@@ -119,9 +140,28 @@ Hostname: server5.testbed.com
 192.168.1.15/24
 Gateway: 192.168.1.1
 DNS: 192.168.1.1
+[VRRP]({{< relref "2024-05-15-200707-vrrp.md" >}}) LAN IP / client default gateway: 192.168.1.4/24
 
 
 ### Works Nodes Parts {#works-nodes-parts}
+
+
+## [Domain Name Service (DNS)]({{< relref "20230417083145-dns.md" >}}) {#domain-name-service--dns----20230417083145-dns-dot-md}
+
+DNS based on [BIND 9]({{< relref "2024-05-25-015638-bind_9.md" >}})
+
+Primary DNS IP: 192.168.1.21/24
+Secondary DNS IP: 192.168.1.22/24
+
+
+## [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) [WWAN - External Network]({{< relref "2025-04-10-012017-vyos.md#wwan-wireless-wide-area-network" >}}) Gateway {#vyos--2025-04-10-012017-vyos-dot-md--wwan-external-network--2025-04-10-012017-vyos-dot-md--gateway}
+
+Primary IP: 192.168.1.2/24
+Secondary IP: 192.168.1.3/24
+
+One of the servers has an external Wi-Fi card that links to the university’s Wi-Fi network. This interface is passed to a VyOS VM, which acts as the **gateway router** for the testbed.
+
+The VyOS VM has two interfaces: one connects to the Wi-Fi WAN (providing Internet access/DHCP from campus network), and the other connects to the Proxmox OVS bridge (LAN). This VM provides NAT, firewall, and routing between the testbed’s internal LAN and the outside network.
 
 
 ### [spine-leaf architecture]({{< relref "2025-04-10-063517-spine_leaf_architecture.md" >}}) {#spine-leaf-architecture--2025-04-10-063517-spine-leaf-architecture-dot-md}
@@ -131,13 +171,6 @@ All of servers have their primary Proxmox host NICs (the SmartNICs) connected to
 Each server connects to its respective leaf switch through the SmartNIC, which supports P4-programmable hardware offloads. The OVS bridge on each Proxmox host bridges the internal VMs to the physical SmartNIC interface, which uplinks to the leaf switch. This architecture allows for traffic from VMs on different servers to be routed through the spine switch, enabling scalable and low-latency east-west communication.
 
 The SmartNICs on each server can filter, route, or encapsulate packets in hardware using their P4-programmable pipeline before sending them out. This effectively distributes switching and network logic between the edge (SmartNICs) and the fabric (leaf and spine switches). The programmable nature of both the NICs and the switches provides flexibility for implementing SDN policies, slicing, and advanced telemetry in the data center fabric.
-
-
-### [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) [WWAN - External Network]({{< relref "2025-04-10-012017-vyos.md#wwan-wireless-wide-area-network" >}}) Gateway {#vyos--2025-04-10-012017-vyos-dot-md--wwan-external-network--2025-04-10-012017-vyos-dot-md--gateway}
-
-One of the servers has an external Wi-Fi card that links to the university’s Wi-Fi network. This interface is passed to a VyOS VM, which acts as the **gateway router** for the testbed.
-
-The VyOS VM has two interfaces: one connects to the Wi-Fi WAN (providing Internet access/DHCP from campus network), and the other connects to the Proxmox OVS bridge (LAN). This VM provides NAT, firewall, and routing between the testbed’s internal LAN and the outside network.
 
 
 ### [Kubernetes]({{< relref "20230105185343-kubernetes.md" >}})/[OpenShift]({{< relref "20230420020557-openshift.md" >}})([OKD]({{< relref "20230518171737-okd.md" >}})) Cluster {#kubernetes--20230105185343-kubernetes-dot-md--openshift--20230420020557-openshift-dot-md----okd-20230518171737-okd-dot-md---cluster}
