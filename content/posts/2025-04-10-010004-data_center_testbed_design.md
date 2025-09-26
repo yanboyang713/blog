@@ -140,7 +140,6 @@ Hostname: server5.testbed.com
 192.168.1.15/24
 Gateway: 192.168.1.1
 DNS: 192.168.1.1
-[VRRP]({{< relref "2024-05-15-200707-vrrp.md" >}}) LAN IP / client default gateway: 192.168.1.4/24
 
 
 ### Works Nodes Parts {#works-nodes-parts}
@@ -158,6 +157,7 @@ Secondary DNS IP: 192.168.1.22/24
 
 Primary IP: 192.168.1.2/24
 Secondary IP: 192.168.1.3/24
+[VRRP]({{< relref "2024-05-15-200707-vrrp.md" >}}) LAN IP / client default gateway: 192.168.1.4/24
 
 One of the servers has an external Wi-Fi card that links to the university’s Wi-Fi network. This interface is passed to a VyOS VM, which acts as the **gateway router** for the testbed.
 
