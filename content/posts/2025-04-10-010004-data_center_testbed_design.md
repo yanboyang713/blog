@@ -164,6 +164,11 @@ One of the servers has an external Wi-Fi card that links to the university’s W
 The VyOS VM has two interfaces: one connects to the Wi-Fi WAN (providing Internet access/DHCP from campus network), and the other connects to the Proxmox OVS bridge (LAN). This VM provides NAT, firewall, and routing between the testbed’s internal LAN and the outside network.
 
 
+## Jumper {#jumper}
+
+[apache guacamole]({{< relref "2025-09-26-162254-apache_guacamole.md" >}})
+
+
 ### [spine-leaf architecture]({{< relref "2025-04-10-063517-spine_leaf_architecture.md" >}}) {#spine-leaf-architecture--2025-04-10-063517-spine-leaf-architecture-dot-md}
 
 All of servers have their primary Proxmox host NICs (the SmartNICs) connected to ports on individual **leaf switches**. These leaf switches, in turn, are interconnected via a high-speed **spine switch**, forming a classic spine-leaf topology.
