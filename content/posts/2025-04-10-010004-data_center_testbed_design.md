@@ -159,9 +159,12 @@ Primary IP: 192.168.1.2/24
 Secondary IP: 192.168.1.3/24
 [VRRP]({{< relref "2024-05-15-200707-vrrp.md" >}}) LAN IP / client default gateway: 192.168.1.4/24
 
-One of the servers has an external Wi-Fi card that links to the university’s Wi-Fi network. This interface is passed to a VyOS VM, which acts as the **gateway router** for the testbed.
+The T470 and T420 laptops are equipped with external Wi-Fi cards that connect to the university’s Wi-Fi network. The T470’s VyOS VM serves as the primary gateway, while the T420’s VyOS VM acts as the secondary gateway.
 
-The VyOS VM has two interfaces: one connects to the Wi-Fi WAN (providing Internet access/DHCP from campus network), and the other connects to the Proxmox OVS bridge (LAN). This VM provides NAT, firewall, and routing between the testbed’s internal LAN and the outside network.
+Each Wi-Fi interface is passed through to its respective VyOS virtual machine, which serves as the gateway router for the testbed. Each VyOS VM has two network interfaces: one connected to the Wi-Fi WAN, providing Internet access and DHCP services from the campus network, and the other connected to the Proxmox OVS bridge, forming the internal LAN.
+
+
+## [Setting Up EVPN on Proxmox SDN]({{< relref "2025-09-28-131926-setting_up_evpn_on_proxmox_sdn.md" >}}) {#setting-up-evpn-on-proxmox-sdn--2025-09-28-131926-setting-up-evpn-on-proxmox-sdn-dot-md}
 
 
 ## Jumper {#jumper}
