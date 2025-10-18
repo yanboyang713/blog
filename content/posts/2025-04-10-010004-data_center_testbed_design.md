@@ -13,75 +13,74 @@ All servers run [Proxmox VE]({{< relref "20230228043925-proxmox_ve.md" >}}) (Deb
 
 One server also provides WAN connectivity through a [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) router VM (using a Wi-Fi uplink to campus network), and another runs a [BIND 9]({{< relref "2024-05-25-015638-bind_9.md" >}}) [(DNS)]({{< relref "20230417083145-dns.md" >}}) service to support the on-premises [OKD]({{< relref "20230518171737-okd.md" >}}) cluster name resolution.
 
+PVE access URL: <https://172.27.135.44:8006/>
+
 
 ## Physical Topology and Components {#physical-topology-and-components}
 
 {{< figure src="https://res.cloudinary.com/dkvj6mo4c/image/upload/v1755893142/UVA/testbed_xubcqc.png" >}}
 
 
-### Devices Management Parts {#devices-management-parts}
+### Management Network {#management-network}
 
 
 #### [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) cAP ax {#mikrotik--20230226101927-mikrotik-dot-md--cap-ax}
 
-<https://172.27.135.44:8006/>
+-   ID: cAPGi-5HaxD2HaxD-US
+-   FCC ID: TV7CPG52X
+-   IC: 7442A-CAPAX
+-   Eth MAC: 78:9A:18:59:78:80
+-   WIFI1(5.8Ghz) MAC: 78:9A:18:59:78:83
+-   WIFI2(2.4Ghz) MAC: 78:9A:18:59:78:82
+-   SN: HF2098EMRR7/343/US
 
-ID: cAPGi-5HaxD2HaxD-US
-FCC ID: TV7CPG52X
-IC: 7442A-CAPAX
-Eth MAC: 78:9A:18:59:78:80
-WIFI1(5.8Ghz) MAC: 78:9A:18:59:78:83
-WIFI2(2.4Ghz) MAC: 78:9A:18:59:78:82
-SN: HF2098EMRR7/343/US
-
-WIFI1 act as a Wi-Fi client (station) to the hidden “[wahoo]({{< relref "2025-08-08-101821-uva_eduroam_wireless_network_under_linux.md#wahoo" >}})” SSID, grab an IP via UVA WIFI network's DHCP server(current IP: 172.27.135.44) on that link.
-bridge connect ether1, ether2, and WIFI2 as LAN.
-bridge IP: 192.168.88.1/24
-NAT made between WIFI1 and bridge.
-Port forward 192.168.88.2:8006 to WAN (WIFI1).
-WIFI2 as LAN wifi, ssid (myLAN).
+-   WIFI1 act as a Wi-Fi client (station) to the hidden “[wahoo]({{< relref "2025-08-08-101821-uva_eduroam_wireless_network_under_linux.md#wahoo" >}})” SSID, grab an IP via UVA WIFI network's DHCP server(current IP: 172.27.135.44) on that link.
+-   bridge connect ether1, ether2, and WIFI2 as LAN.
+-   bridge IP: 192.168.88.1/24
+-   NAT made between WIFI1 and bridge.
+-   [Port Forward]({{< relref "2025-08-15-212717-routeros_port_forward_from_lan_to_wan.md" >}}) 192.168.88.2/24 port 8006 to WAN (WIFI1).
+-   WIFI2 as LAN wifi, ssid (myLAN).
 
 [cAP ax setup details (step by step)]({{< relref "2025-08-21-125051-cap_ax_setup_details_step_by_step.md" >}})
 
 
 #### [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) L009UiGS-2HaxD-IN {#mikrotik--20230226101927-mikrotik-dot-md--l009uigs-2haxd-in}
 
-FCC ID: TV7L0092AXIN
-IC: 7442A-L0092AXIN
-SN: HFC092SVAWD/345
-Integration WIFI MAC: 78:9A:18:B6:B0:B5
-Get IP from cAP ax
-[Port Forward]({{< relref "2025-08-15-212717-routeros_port_forward_from_lan_to_wan.md" >}}) 192.168.88.2/24 port 8006 to WAN
+Management Ethernet LAN Switch connects the [Integrated Dell Remote Access Controller (iDRAC)]({{< relref "2025-03-19-000630-integrated_dell_remote_access_controller_idrac.md" >}}) out-of-band management ports of all servers on an isolated management network (for remote power/reset and monitoring).
+
+-   FCC ID: TV7L0092AXIN
+-   IC: 7442A-L0092AXIN
+-   SN: HFC092SVAWD/345
+-   Integration WIFI MAC: 78:9A:18:B6:B0:B5
+-   Get IP from cAP ax
 
 
-#### Management Ethernet Switch (dedicated) {#management-ethernet-switch--dedicated}
-
-A dedicated management Ethernet switch connects the [Integrated Dell Remote Access Controller (iDRAC)]({{< relref "2025-03-19-000630-integrated_dell_remote_access_controller_idrac.md" >}}) out-of-band management ports of all servers on an isolated management network (for remote power/reset and monitoring).
+### [Proxmox VE]({{< relref "20230228043925-proxmox_ve.md" >}}) Cluster Network {#proxmox-ve--20230228043925-proxmox-ve-dot-md--cluster-network}
 
 
-### Masters Nodes Management Parts {#masters-nodes-management-parts}
+#### [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) L009UiGS-RM {#mikrotik--20230226101927-mikrotik-dot-md--l009uigs-rm}
+
+-   SN: HFE097YP05K/346
+
+<!--list-separator-->
+
+-  WAN
+
+    -   WAN IP: 192.168.88.2/24
+    -   MASK: 255.255.255.0
+    -   DNS:8.8.8.8;8.8.4.4
+
+<!--list-separator-->
+
+-  LAN
+
+    -   LAN: 192.168.1.1/24
+    -   MASK: 255.255.255.0
+
+    [Port Forward]({{< relref "2025-08-15-212717-routeros_port_forward_from_lan_to_wan.md" >}}) 192.168.1.11/24 port 8006 to WAN
 
 
-#### [Proxmox VE]({{< relref "20230228043925-proxmox_ve.md" >}}) {#proxmox-ve--20230228043925-proxmox-ve-dot-md}
-
-All Proxmox servers are part of a single Proxmox cluster (for ease of management, enabling features like VM live migration across servers). They share the management network for cluster coordination. VMs on any server can reach VMs on another server via the switch.
-
-
-### [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) L009UiGS-RM {#mikrotik--20230226101927-mikrotik-dot-md--l009uigs-rm}
-
-SN: HFE097YP05K/346
-
-WAN IP: 192.168.88.2/24
-MASK: 255.255.255.0
-DNS:8.8.8.8;8.8.4.4
-
-LAN: 192.168.1.1/24
-MASK: 255.255.255.0
-
-[Port Forward]({{< relref "2025-08-15-212717-routeros_port_forward_from_lan_to_wan.md" >}}) 192.168.1.11/24 port 8006 to WAN
-
-
-### DIY server {#diy-server}
+#### DIY server {#diy-server}
 
 Hostname: server1.testbed.com
 192.168.1.11/24
@@ -89,7 +88,7 @@ Gateway: 192.168.1.1
 DNS: 192.168.1.1
 
 
-### T470s {#t470s}
+#### T470s {#t470s}
 
 Hostname: server2.testbed.com
 192.168.1.12/24
@@ -106,7 +105,7 @@ WI-FI card:
 -   serial: 14:ab:c5:8f:ab:f6
 
 
-### T420s {#t420s}
+#### T420s {#t420s}
 
 Hostname: server3.testbed.com
 192.168.1.13/24
@@ -126,7 +125,7 @@ WIFI card:
 -   serial: a0:88:b4:75:2a:50
 
 
-### GPU PC {#gpu-pc}
+#### GPU PC {#gpu-pc}
 
 Hostname: server4.testbed.com
 192.168.1.14/24
@@ -134,7 +133,7 @@ Gateway: 192.168.1.1
 DNS: 192.168.1.1
 
 
-### Dell R730 Server {#dell-r730-server}
+#### Dell R730 Server {#dell-r730-server}
 
 Hostname: server5.testbed.com
 192.168.1.15/24
@@ -142,10 +141,10 @@ Gateway: 192.168.1.1
 DNS: 192.168.1.1
 
 
-### Works Nodes Parts {#works-nodes-parts}
+## Services {#services}
 
 
-## [Domain Name Service (DNS)]({{< relref "20230417083145-dns.md" >}}) {#domain-name-service--dns----20230417083145-dns-dot-md}
+### [Domain Name Service (DNS)]({{< relref "20230417083145-dns.md" >}}) {#domain-name-service--dns----20230417083145-dns-dot-md}
 
 DNS based on [BIND 9]({{< relref "2024-05-25-015638-bind_9.md" >}})
 
@@ -153,7 +152,7 @@ Primary DNS IP: 192.168.1.21/24
 Secondary DNS IP: 192.168.1.22/24
 
 
-## [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) [WWAN - External Network]({{< relref "2025-04-10-012017-vyos.md#wwan-wireless-wide-area-network" >}}) Gateway {#vyos--2025-04-10-012017-vyos-dot-md--wwan-external-network--2025-04-10-012017-vyos-dot-md--gateway}
+### [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) [WWAN - External Network]({{< relref "2025-04-10-012017-vyos.md#wwan-wireless-wide-area-network" >}}) Gateway {#vyos--2025-04-10-012017-vyos-dot-md--wwan-external-network--2025-04-10-012017-vyos-dot-md--gateway}
 
 Primary IP: 192.168.1.2/24
 Secondary IP: 192.168.1.3/24

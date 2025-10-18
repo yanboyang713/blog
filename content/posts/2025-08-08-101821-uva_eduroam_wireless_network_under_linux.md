@@ -10,12 +10,20 @@ draft: false
 ## Eduroam {#eduroam}
 
 
-### Get a Personal Certificate: {#get-a-personal-certificate}
+### Get a UVA's Personal Certificate (.p12) {#get-a-uva-s-personal-certificate--dot-p12}
+
+Linux or if you need the actual .p12 file: Use the SecureW2 “Limited” portal to generate and download your UVA Digital Certificate (.p12). You’ll set a passphrase during creation, then import it into NetworkManager/Firefox.
+
+-   Reference:
+
+<https://virginia.service-now.com/its?id=itsweb_kb_article&sys_id=58aafbcfdbf6c744f032f1f51d961927>
+
+-   Steps
 
 Point a web browser at <https://cloud.securew2.com/public/82116/limited/?device=Unknown> and follow the instructions there.
 ![](https://galileo.phys.virginia.edu/compfac/faq/new-cert-gen-1.png)
 
-Note that you’ll be asked to choose a passphrase for the certificate. The passphrase must be shorter than 15 characters. If you attempt to enter a longer passphrase, you’ll see a "passphrase invalid" message.
+**Note:** that you’ll be asked to choose a passphrase for the certificate. The passphrase must be shorter than 15 characters. If you attempt to enter a longer passphrase, you’ll see a "passphrase invalid" message.
 ![](https://galileo.phys.virginia.edu/compfac/faq/new-cert-gen-2.png)
 At the end, this process should download a file with a name ending in ".p12".
 
