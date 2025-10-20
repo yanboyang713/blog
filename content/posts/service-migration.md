@@ -15,7 +15,7 @@ draft: false
 
 <!--list-separator-->
 
--  [Setting Up EVPN on Proxmox SDN]({{< relref "../references/2025-09-28-131926-setting_up_evpn_on_proxmox_sdn.md" >}})
+-  [Setting Up EVPN on Proxmox SDN]({{< relref "2025-09-28-131926-setting_up_evpn_on_proxmox_sdn.md" >}})
 
 
 #### Cloud {#cloud}
