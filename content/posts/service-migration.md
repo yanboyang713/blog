@@ -13,7 +13,9 @@ draft: false
 
 #### <span class="org-todo todo TODO">TODO</span> Local {#local}
 
--   [Setting Up EVPN on Proxmox SDN]({{< relref "org-roam/references/2025-09-28-131926-setting_up_evpn_on_proxmox_sdn.md" >}})
+<!--list-separator-->
+
+-  [Setting Up EVPN on Proxmox SDN]({{< relref "../references/2025-09-28-131926-setting_up_evpn_on_proxmox_sdn.md" >}})
 
 
 #### Cloud {#cloud}
