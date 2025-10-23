@@ -10,6 +10,9 @@ This project has three focus parts: Cellular Networks Testbed, LLMs, and optimiz
 
 ### Cellular Networks Testbed {#cellular-networks-testbed}
 
+![](https://www.mdpi.com/jsan/jsan-14-00079/article_deploy/html/images/jsan-14-00079-g002-550.jpg)
+Image from: Real-Time Service Migration in Edge Networks: A Survey
+
 The testbed architecture spans four tiers: Central Cloud, Regional MEC, Aggregation MEC, and Local MEC.
 **Primary focus: Regional MEC and Aggregation MEC.**
 Regional MEC, Aggregation MEC, and Local MEC should be deployed to my [PVE Testbed.]({{< relref "2025-04-10-010004-data_center_testbed_design.md" >}})
@@ -96,7 +99,7 @@ N6 (UPF ⇄ campus/ISP): routed toward the PoP
 Focus on multi-agent workflow design and LLM fine-tuning.
 
 
-#### LLM corpus {#llm-corpus}
+#### TODO LLM corpus {#llm-corpus}
 
 <!--list-separator-->
 
@@ -129,7 +132,7 @@ Focus on multi-agent workflow design and LLM fine-tuning.
     <https://docs.cilium.io/en/stable/network/kubernetes/index.html>
 
 
-#### LLM Serving {#llm-serving}
+#### TODO LLM Serving {#llm-serving}
 
 Deploy Three LLMs to Regional MEC or Aggregation MEC:
 
@@ -139,7 +142,13 @@ Deploy Three LLMs to Regional MEC or Aggregation MEC:
 
 <https://ai-on-openshift.io/generative-ai/llm-serving/>
 
+<!--list-separator-->
 
-### Optimization Algorithms {#optimization-algorithms}
+- TODO  [Retrieval Augmented Generation (RAG)]({{< relref "2023-12-06-164642-retrieval_augmented_generation_rag.md" >}})
 
-Prioritize [time series forecasting]({{< relref "2024-02-27-111600-time_series_forecasting.md" >}}) and [decision making]({{< relref "2025-10-22-204121-decision_making.md" >}}).
+    [Org-roam MCP Server]({{< relref "2025-09-19-190143-org_roam_mcp_server.md" >}})
+
+
+### TODO Optimization Algorithms {#optimization-algorithms}
+
+Prioritize [time series forecasting]({{< relref "2024-02-27-111600-time_series_forecasting.md" >}}) and [decision making]({{< relref "2025-10-22-204121-decision_making.md" >}}) (TBD).

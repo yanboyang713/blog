@@ -13,6 +13,9 @@ draft: false
 -   [Neo4j]({{< relref "2023-11-15-080909-neo4j.md" >}})
 -   [vector database]({{< relref "2024-07-28-144311-vector_database.md" >}})
 
+[Org-roam MCP Server]({{< relref "2025-09-19-190143-org_roam_mcp_server.md" >}})
+[GraphRAG]({{< relref "2024-07-10-054030-graphrag.md" >}})
+
 
 ## Reference List {#reference-list}
 
