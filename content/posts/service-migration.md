@@ -10,7 +10,8 @@ This project has three focus parts: Cellular Networks Testbed, LLMs, and optimiz
 
 ### Cellular Networks Testbed {#cellular-networks-testbed}
 
-![](https://www.mdpi.com/jsan/jsan-14-00079/article_deploy/html/images/jsan-14-00079-g002-550.jpg)
+{{< figure src="https://www.mdpi.com/jsan/jsan-14-00079/article_deploy/html/images/jsan-14-00079-g002-550.jpg" >}}
+
 Image from: Real-Time Service Migration in Edge Networks: A Survey
 
 The testbed architecture spans four tiers: Central Cloud, Regional MEC, Aggregation MEC, and Local MEC.
@@ -137,7 +138,7 @@ Focus on multi-agent workflow design and LLM fine-tuning.
 Deploy Three LLMs to Regional MEC or Aggregation MEC:
 
 -   Custom LLM (based on [Google Gemma]({{< relref "2025-04-19-013506-google_gemma.md" >}})) fine-tuned on [UVA CS Slurm cluster]({{< relref "2025-08-28-210144-uva_cs_computing_environment.md#uva-cs-id-822ba079-5358-4814-94f5-66a7f741b41a-slurm-cluster" >}}).
--   [Codex CLI]({{< relref "2025-10-09-180435-coding_agent.md#codex-cli" >}})
+-   [Codex CLI]({{< relref "2025-10-09-180435-coding_agent.md#codex-cli" >}}) / [Gemini CLI]({{< relref "2025-10-09-180435-coding_agent.md#gemini-cli" >}}) / [Droid CLI]({{< relref "2025-10-09-180435-coding_agent.md#droid-cli" >}})
 -   Time-Series LLM (TBD)
 
 <https://ai-on-openshift.io/generative-ai/llm-serving/>
