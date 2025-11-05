@@ -14,6 +14,16 @@ draft: false
 Project directory /p/nmg5g
 
 
+### attach CS project dir to Arch {#attach-cs-project-dir-to-arch}
+
+
+#### Install SMB/CIFS tools {#install-smb-cifs-tools}
+
+```bash
+sudo pacman -Syu --needed cifs-utils gvfs-smb smbclient keyutils
+```
+
+
 ## UVA CS [Slurm]({{< relref "2023-12-10-182914-slurm.md" >}}) cluster {#uva-cs-slurm--2023-12-10-182914-slurm-dot-md--cluster}
 
 <https://www.cs.virginia.edu/computing/doku.php?id=compute_slurm#resource_limits>
