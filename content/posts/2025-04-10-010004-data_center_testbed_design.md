@@ -20,7 +20,9 @@ Objectives:
 Access:
 
 -   Platform: All servers run [Proxmox VE]({{< relref "20230228043925-proxmox_ve.md" >}}) (Debian-based).
--   PVE web UI: <https://172.27.135.44:8006/>
+-   PVE web UI access from management Gateway: <https://172.27.135.44:8006/>
+-   PVE web UI access from [wahoo]({{< relref "2025-08-08-101821-uva_eduroam_wireless_network_under_linux.md#wahoo" >}}) Primary Gateway: <https://172.27.161.210:8006/>
+-   PVE web UI access from [wahoo]({{< relref "2025-08-08-101821-uva_eduroam_wireless_network_under_linux.md#wahoo" >}}) Secondary Gateway: <https://172.27.132.125:8006/>
 
 
 ## Physical Topology and Components {#physical-topology-and-components}
