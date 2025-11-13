@@ -158,7 +158,7 @@ DNS based on [BIND 9]({{< relref "2024-05-25-015638-bind_9.md" >}}).
 -   Scope: DNS for the Proxmox VE cluster only. The dedicated management network has its own DNS. The Kubernetes/[OKD]({{< relref "20230518171737-okd.md" >}}) cluster uses internal DNS.
 
 
-### [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) [WWAN - External Network]({{< relref "2025-04-10-012017-vyos.md#wwan-wireless-wide-area-network" >}}) Gateway {#vyos--2025-04-10-012017-vyos-dot-md--wwan-external-network--2025-04-10-012017-vyos-dot-md--gateway}
+### [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) [WWAN - External Network]({{< relref "2025-04-10-012017-vyos.md#wwan-wireless-wide-area-network" >}}) Gateway (UVA's [wahoo]({{< relref "2025-08-08-101821-uva_eduroam_wireless_network_under_linux.md#wahoo" >}})) {#vyos--2025-04-10-012017-vyos-dot-md--wwan-external-network--2025-04-10-012017-vyos-dot-md--gateway--uva-s-wahoo-2025-08-08-101821-uva-eduroam-wireless-network-under-linux-dot-md}
 
 -   Primary: 192.168.1.2/24
 -   Secondary: 192.168.1.3/24
@@ -168,6 +168,11 @@ The T470 and T420 laptops host VyOS VMs with Wi‑Fi interfaces passed through. 
 
 -   One interface to the campus Wi‑Fi WAN (Internet via campus DHCP).
 -   One interface to the Proxmox OVS bridge (internal LAN).
+
+
+### [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) CS network Gateway {#vyos--2025-04-10-012017-vyos-dot-md--cs-network-gateway}
+
+LAN: 192.168.1.5/24
 
 
 ## [Setting Up EVPN on Proxmox SDN]({{< relref "2025-09-28-131926-setting_up_evpn_on_proxmox_sdn.md" >}}) {#setting-up-evpn-on-proxmox-sdn--2025-09-28-131926-setting-up-evpn-on-proxmox-sdn-dot-md}

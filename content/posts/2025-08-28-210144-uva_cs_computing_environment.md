@@ -24,6 +24,9 @@ sudo pacman -Syu --needed cifs-utils gvfs-smb smbclient keyutils
 ```
 
 
+### [Proxmox’s CIFS storage]({{< relref "2025-09-28-163711-proxmox_s_cifs_storage.md" >}}) {#proxmox-s-cifs-storage--2025-09-28-163711-proxmox-s-cifs-storage-dot-md}
+
+
 ## UVA CS [Slurm]({{< relref "2023-12-10-182914-slurm.md" >}}) cluster {#uva-cs-slurm--2023-12-10-182914-slurm-dot-md--cluster}
 
 <https://www.cs.virginia.edu/computing/doku.php?id=compute_slurm#resource_limits>
