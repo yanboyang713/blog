@@ -162,8 +162,9 @@ DNS based on [BIND 9]({{< relref "2024-05-25-015638-bind_9.md" >}}).
 
 ### [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) [WWAN - External Network]({{< relref "2025-04-10-012017-vyos.md#wwan-wireless-wide-area-network" >}}) Gateway (UVA's [wahoo]({{< relref "2025-08-08-101821-uva_eduroam_wireless_network_under_linux.md#wahoo" >}})) {#vyos--2025-04-10-012017-vyos-dot-md--wwan-external-network--2025-04-10-012017-vyos-dot-md--gateway--uva-s-wahoo-2025-08-08-101821-uva-eduroam-wireless-network-under-linux-dot-md}
 
--   Primary: 192.168.1.2/24
--   Secondary: 192.168.1.3/24
+-   Primary: 192.168.1.5/24 (To CS Network)
+-   Backup: 192.168.1.2/24
+-   Backup: 192.168.1.3/24
 -   [VRRP]({{< relref "2024-05-15-200707-vrrp.md" >}}) virtual/default gateway (LAN): 192.168.1.4/24
 
 The T470 and T420 laptops host VyOS VMs with Wi‑Fi interfaces passed through. The T470’s VyOS VM serves as primary; the T420’s VyOS VM is secondary. Each VyOS VM has:

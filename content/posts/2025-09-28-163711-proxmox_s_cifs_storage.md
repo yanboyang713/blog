@@ -49,5 +49,5 @@ Explanation of flags
 
 ## Reference List {#reference-list}
 
-1.  <https://pve.proxmox.com/wiki/Storage%3A_CIFS?utm_source=chatgpt.com>
+1.  <https://pve.proxmox.com/wiki/Storage%3A_CIFS>
 2.  <https://www.cs.virginia.edu/computing/doku.php?id=project_directories>
