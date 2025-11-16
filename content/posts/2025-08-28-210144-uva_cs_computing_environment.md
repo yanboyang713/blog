@@ -14,13 +14,84 @@ draft: false
 Project directory /p/nmg5g
 
 
-### attach CS project dir to Arch {#attach-cs-project-dir-to-arch}
+### Attach CS Project Directory/CIFS to Arch Linux {#attach-cs-project-directory-cifs-to-arch-linux}
 
 
 #### Install SMB/CIFS tools {#install-smb-cifs-tools}
 
 ```bash
 sudo pacman -Syu --needed cifs-utils gvfs-smb smbclient keyutils
+```
+
+
+#### Create a mount point {#create-a-mount-point}
+
+```bash
+sudo mkdir -p /mnt/nmg5g
+```
+
+
+#### Quick test mount {#quick-test-mount}
+
+Use the same server and share as on Proxmox, and similar vers= if you set it there:
+
+```bash
+sudo mount -t cifs //samba.cs.virginia.edu/p/nmg5g /mnt/nmg5g -o "username=rhe9cf,domain=CSDOM,vers=3.0,uid=$(id -u),gid=$(id -g),file_mode=0644,dir_mode=0755"
+```
+
+-   Enter the password when prompted and check the contents: ls /mnt/nmg5g.
+-   If it fails, try another vers= (e.g. 2.1, 3.1.1).
+
+umount:
+
+```bash
+sudo umount /mnt/nmg5g
+```
+
+
+#### persistent, create credentials and fstab {#persistent-create-credentials-and-fstab}
+
+Create credentials file
+
+```bash
+sudo mkdir -p /etc/samba
+sudo vim /etc/samba/creds.nmg5g
+```
+
+Contents:
+
+```file
+username=rhe9cf
+password=YOUR_PASSWORD_HERE
+domain=CSDOM
+```
+
+Then:
+
+```bash
+sudo chmod 600 /etc/samba/creds.nmg5g
+```
+
+Add fstab entry
+
+Edit /etc/fstab:
+
+```bash
+sudo vim /etc/fstab
+```
+
+Add this line (adjust uid/gid if needed):
+
+```file
+//samba.cs.virginia.edu/p/nmg5g /mnt/nmg5g cifs _netdev,nofail,credentials=/etc/samba/creds.nmg5g,vers=3.0,uid=1000,gid=1000,file_mode=0644,dir_mode=0755  0  0
+```
+
+Test
+
+```bash
+sudo umount /mnt/nmg5g   # ignore error if not mounted
+sudo mount -a
+ls /mnt/nmg5g
 ```
 
 

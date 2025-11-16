@@ -34,6 +34,8 @@ To harness the power of EVPN and VXLAN in your Proxmox environment, follow these
 
 ## Step-by-Step Guide {#step-by-step-guide}
 
+Below, will based on my [Data Center Testbed]({{< relref "2025-04-10-010004-data_center_testbed_design.md" >}}).
+
 
 ### ASNs and roles {#asns-and-roles}
 
