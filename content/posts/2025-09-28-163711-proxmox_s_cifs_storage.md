@@ -47,6 +47,16 @@ Explanation of flags
 | \`--content iso,vztmpl,backup\`    | Allow storage of ****ISO files****, ****container templates****, and ****backups**** only.           |
 
 
+## remove cifs {#remove-cifs}
+
+On any node in the cluster:
+
+```bash
+# Replace uva_proj with your storage ID if different
+pvesm remove uva_proj
+```
+
+
 ## Reference List {#reference-list}
 
 1.  <https://pve.proxmox.com/wiki/Storage%3A_CIFS>

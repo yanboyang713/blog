@@ -12,7 +12,7 @@ Objectives:
 -   Enable reproducible, isolated experiments for Cellular Networking, SDN, and NFV research.
 -   Support precise timing via [PTP]({{< relref "2024-05-20-050327-precision_time_protocol_ptp.md" >}}).
 -   Provide resilient egress using dual [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) gateways with [VRRP]({{< relref "2024-05-15-200707-vrrp.md" >}}).
--   Offer flexible L2 overlays with Proxmox SDN + EVPN.
+-   Offer flexible L2 overlays with Proxmox SDN + [EVPN]({{< relref "2025-09-28-131926-setting_up_evpn_on_proxmox_sdn.md" >}}).
 -   Host Aether 5G workloads on a Kubernetes/[OKD]({{< relref "20230518171737-okd.md" >}}) cluster.
 -   Centralize service discovery with [BIND 9]({{< relref "2024-05-25-015638-bind_9.md" >}}) DNS.
 -   Ensure safe access via a dedicated management network using [iDRAC]({{< relref "2025-03-19-000630-integrated_dell_remote_access_controller_idrac.md" >}}) and [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) gear.
