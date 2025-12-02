@@ -159,6 +159,14 @@ DNS based on [BIND 9]({{< relref "2024-05-25-015638-bind_9.md" >}}).
 -   Secondary: 192.168.1.22/24
 -   Scope: DNS for the Proxmox VE cluster only. The dedicated management network has its own DNS. The Kubernetes/[OKD]({{< relref "20230518171737-okd.md" >}}) cluster uses internal DNS.
 
+[EVPN]({{< relref "2025-09-28-131926-setting_up_evpn_on_proxmox_sdn.md" >}}) DNS [PowerDNS]({{< relref "2024-05-25-025431-powerdns.md" >}})
+192.168.1.23/24
+
+
+### [DHCP]({{< relref "20230531193526-dhcp.md" >}}) {#dhcp--20230531193526-dhcp-dot-md}
+
+[NetBox]({{< relref "2025-11-30-174834-netbox.md" >}}) IP: 192.168.1.24/24
+
 
 ### [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) [WWAN - External Network]({{< relref "2025-04-10-012017-vyos.md#wwan-wireless-wide-area-network" >}}) Gateway (UVA's [wahoo]({{< relref "2025-08-08-101821-uva_eduroam_wireless_network_under_linux.md#wahoo" >}})) {#vyos--2025-04-10-012017-vyos-dot-md--wwan-external-network--2025-04-10-012017-vyos-dot-md--gateway--uva-s-wahoo-2025-08-08-101821-uva-eduroam-wireless-network-under-linux-dot-md}
 

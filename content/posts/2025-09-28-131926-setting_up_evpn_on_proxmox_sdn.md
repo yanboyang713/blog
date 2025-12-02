@@ -251,6 +251,20 @@ BGP controller #2 (server2)
 -   Repeat the same values with Node = server2. Click Add.
 
 
+#### Enable [DHCP]({{< relref "20230531193526-dhcp.md" >}}) Controller {#enable-dhcp--20230531193526-dhcp-dot-md--controller}
+
+To automatically assign IPs to VMs and register them in [PowerDNS]({{< relref "2024-05-25-025431-powerdns.md" >}}), you need a DHCP controller.
+
+1.  **Install dnsmasq on all Proxmox nodes**:
+    ```bash
+    apt install dnsmasq
+    systemctl disable --now dnsmasq
+    ```
+    **Note**: We disable the default instance to avoid conflicts; Proxmox SDN manages its own instances.
+
+2.  Setting up [NetBox]({{< relref "2025-11-30-174834-netbox.md" >}}) or [phpIPAM]({{< relref "2025-11-30-223655-phpipam.md" >}})
+
+
 ### Create an EVPN Zone {#create-an-evpn-zone}
 
 1.  Datacenter → SDN → Zones → Add → EVPN
@@ -294,7 +308,7 @@ In the Proxmox Admin web UI, navigate to Datacenter &gt; SDN &gt; VNets.
 4.  Subnet: 10.60.10.0/24
 5.  Gateway: 10.60.10.1 -&gt; Proxmox will install 10.60.10.1 as the anycast VRF gateway on the EVPN fabric. Advertise 10.60.10.0/24 to VyOS via BGP (because you enabled “Advertise Subnets” in the EVPN zone).
 6.  SNAT: tick this, the PVE exit node will masquerade/NAT this subnet to its own uplink. If you don’t want that because VyOS is your Internet gateway doing NAT. Enabling it would create double-NAT/confusion. You should set [Internet access / NAT for EVPN subnet](#internet-access-nat-for-evpn-subnet) on VyOS.
-7.  DNS Zone Prefix: (optional, only if you configured a DNS plugin under SDN → DNS, e.g., PowerDNS)
+7.  DNS Zone Prefix: (optional, only if you configured a DNS plugin under SDN → DNS, e.g., [PowerDNS]({{< relref "2024-05-25-025431-powerdns.md" >}}))
 8.  DHCP Ranges (optional)
     -   If you want Proxmox to hand out DHCP for this VNet, add a range, e.g.: Start: 10.60.10.100 End: 10.60.10.199
     -   If you prefer static addressing or cloud-init, don’t add a range (no DHCP will run for this subnet).
