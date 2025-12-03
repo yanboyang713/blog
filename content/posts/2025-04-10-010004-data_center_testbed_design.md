@@ -27,7 +27,7 @@ Access:
 
 ## Physical Topology and Components {#physical-topology-and-components}
 
-{{< figure src="https://res.cloudinary.com/dkvj6mo4c/image/upload/v1755893142/UVA/testbed_xubcqc.png" >}}
+{{< figure src="https://res.cloudinary.com/dkvj6mo4c/image/upload/v1764729697/testbed_2_wlunjv.png" >}}
 
 Topology overview: a dedicated management network for iDRAC access and PVE web UI access; a Proxmox VE LAN with dual VyOS WWAN gateways; EVPN overlays for tenant/lab networks; and a Kubernetes/OKD cluster for Aether 5G.
 
