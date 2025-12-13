@@ -7,7 +7,8 @@ draft: false
 
 This Proxmox VE–based, multi-node testbed supports research and prototyping across [Cellular Networking]({{< relref "20230614221419-cellular_network.md" >}}), [network measurement]({{< relref "2025-11-05-041036-network_measurement.md" >}}), [Software-Defined Networking (SDN)]({{< relref "2025-04-10-011054-software_defined_networking_sdn.md" >}}), and [Network Function Virtualization (NFV)]({{< relref "2025-04-10-011707-network_function_virtualization_nfv.md" >}}). It offers realistic north–south connectivity via dual WWAN gateways, flexible east–west segmentation using EVPN overlays, internal DNS, and a Kubernetes/OKD substrate for deploying [Aether 5G]({{< relref "2024-05-18-220246-aether.md" >}}) components. The environment emphasizes repeatability, observability, and safe remote management.
 
-Objectives:
+
+### Objectives {#objectives}
 
 -   Enable reproducible, isolated experiments for Cellular Networking, SDN, and NFV research.
 -   Support precise timing via [PTP]({{< relref "2024-05-20-050327-precision_time_protocol_ptp.md" >}}).
@@ -17,12 +18,11 @@ Objectives:
 -   Centralize service discovery with [BIND 9]({{< relref "2024-05-25-015638-bind_9.md" >}}) DNS.
 -   Ensure safe access via a dedicated management network using [iDRAC]({{< relref "2025-03-19-000630-integrated_dell_remote_access_controller_idrac.md" >}}) and [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) gear.
 
-Access:
+
+### Access {#access}
 
 -   Platform: All servers run [Proxmox VE]({{< relref "20230228043925-proxmox_ve.md" >}}) (Debian-based).
 -   PVE web UI access from management Gateway: <https://172.27.135.44:8006/>
--   PVE web UI access from [wahoo]({{< relref "2025-08-08-101821-uva_eduroam_wireless_network_under_linux.md#wahoo" >}}) Primary Gateway: <https://172.27.161.210:8006/>
--   PVE web UI access from [wahoo]({{< relref "2025-08-08-101821-uva_eduroam_wireless_network_under_linux.md#wahoo" >}}) Secondary Gateway: <https://172.27.132.125:8006/>
 
 
 ## Physical Topology and Components {#physical-topology-and-components}
