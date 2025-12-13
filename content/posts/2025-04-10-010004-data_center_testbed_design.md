@@ -166,6 +166,7 @@ DNS based on [BIND 9]({{< relref "2024-05-25-015638-bind_9.md" >}}).
 ### [DHCP]({{< relref "20230531193526-dhcp.md" >}}) {#dhcp--20230531193526-dhcp-dot-md}
 
 [NetBox]({{< relref "2025-11-30-174834-netbox.md" >}}) IP: 192.168.1.24/24
+[Kea DHCP]({{< relref "2025-12-11-210940-kea_dhcp.md" >}}) IP: 192.168.1.25/24
 
 
 ### [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) [WWAN - External Network]({{< relref "2025-04-10-012017-vyos.md#wwan-wireless-wide-area-network" >}}) Gateway (UVA's [wahoo]({{< relref "2025-08-08-101821-uva_eduroam_wireless_network_under_linux.md#wahoo" >}})) {#vyos--2025-04-10-012017-vyos-dot-md--wwan-external-network--2025-04-10-012017-vyos-dot-md--gateway--uva-s-wahoo-2025-08-08-101821-uva-eduroam-wireless-network-under-linux-dot-md}
@@ -208,7 +209,12 @@ Notes:
 3.  Load Balancer: HAProxy fronts the Kubernetes API and balances across control-plane nodes.
 
 
-### [Precision Time Protocol (PTP)]({{< relref "2024-05-20-050327-precision_time_protocol_ptp.md" >}}) Synchronization {#precision-time-protocol--ptp----2024-05-20-050327-precision-time-protocol-ptp-dot-md--synchronization}
+## [Bastion Host]({{< relref "2025-12-04-183725-bastion_host.md" >}}) {#bastion-host--2025-12-04-183725-bastion-host-dot-md}
+
+[Teleport]({{< relref "2025-11-19-164307-teleport.md" >}}) is the [bastion host]({{< relref "2025-12-04-183725-bastion_host.md" >}}).
+
+
+## [Precision Time Protocol (PTP)]({{< relref "2024-05-20-050327-precision_time_protocol_ptp.md" >}}) Synchronization {#precision-time-protocol--ptp----2024-05-20-050327-precision-time-protocol-ptp-dot-md--synchronization}
 
 PTP ensures consistent, sub‑millisecond time synchronization across hosts to support accurate measurements and time‑sensitive 5G components.
 
