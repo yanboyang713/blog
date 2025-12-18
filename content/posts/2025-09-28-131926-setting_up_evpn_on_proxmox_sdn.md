@@ -4,7 +4,7 @@ date: 2025-09-28
 draft: false
 ---
 
-In the ever-evolving landscape of network virtualization, Ethernet VPN (EVPN) and Virtual Extensible LAN (VXLAN) have emerged as powerful technologies for creating scalable and efficient network overlays. EVPN, combined with VXLAN, offers robust support for multi-tenancy and simplifies the management of large, complex networks. In this guide, we'll walk through the process of setting up EVPN on [Proxmox VE]({{< relref "20230228043925-proxmox_ve.md" >}}) SDN, leveraging the advanced features of Proxmox VE to create a flexible and resilient network infrastructure.
+Ethernet VPN (EVPN) with VXLAN is a common way to build scalable L2/L3 overlays with a BGP-based control plane. This note walks through setting up EVPN on [Proxmox VE]({{< relref "20230228043925-proxmox_ve.md" >}}) SDN to create a flexible, resilient overlay fabric.
 
 
 ## Understanding EVPN and VXLAN {#understanding-evpn-and-vxlan}
@@ -12,38 +12,40 @@ In the ever-evolving landscape of network virtualization, Ethernet VPN (EVPN) an
 
 ### What is EVPN? {#what-is-evpn}
 
-Ethernet VPN (EVPN) is a modern control plane technology designed to carry Layer 2 Ethernet traffic over a wide area network (WAN) using protocols such as BGP (Border Gateway Protocol). EVPN provides efficient MAC address learning and distribution, reducing the need for traditional flooding mechanisms and enhancing scalability. It supports advanced features like active-active multihoming, MAC mobility, and ARP suppression, making it ideal for multi-tenant environments.
+Ethernet VPN (EVPN) is a control-plane technology that carries Layer 2 Ethernet reachability using [BGP]({{< relref "20230608230531-bgp.md" >}})(Border Gateway Protocol). It distributes MAC (and optionally IP) reachability efficiently, reducing flooding and improving scalability. EVPN also supports features such as active/active multihoming, MAC mobility, and ARP/ND suppression, which makes it a strong fit for multi-tenant overlays.
 
 
 ### What is VXLAN? {#what-is-vxlan}
 
-Virtual Extensible LAN (VXLAN) is a network virtualization technology that encapsulates Layer 2 Ethernet frames within Layer 3 UDP packets. This encapsulation allows for the creation of virtual networks that can span large Layer 3 networks, enabling greater scalability and flexibility. VXLAN uses a 24-bit segment ID, known as the VXLAN Network Identifier (VNI), to uniquely identify each virtual network, supporting up to 16 million unique VNIs.
+Virtual Extensible LAN (VXLAN) encapsulates Layer 2 Ethernet frames inside Layer 3 UDP packets, allowing L2 segments to span an L3 underlay. Each overlay segment is identified by a 24-bit VXLAN Network Identifier (VNI), supporting up to ~16 million logical networks.
 
 
 ## Setting Up EVPN on Proxmox SDN {#setting-up-evpn-on-proxmox-sdn}
 
-To harness the power of EVPN and VXLAN in your Proxmox environment, follow these steps to set up EVPN on Proxmox SDN.
+Use the steps below to set up EVPN/VXLAN on Proxmox SDN.
 
 
 ### Prerequisites {#prerequisites}
 
--   Proxmox VE 8.1 or later: Ensure you are running Proxmox VE 8.1 or later, as the core SDN packages are installed by default.
--   FRRouting: Install the frr-pythontools package on all nodes for advanced routing setups.
--   Network Configuration: Ensure your network interfaces are correctly configured and the ifupdown2 package is installed.
+-   Proxmox VE 8.1 or later: Proxmox SDN is included by default.
+-   [FRRouting]({{< relref "2025-12-17-163311-frrouting.md" >}}): Install **frr-pythontools** on all nodes (used by SDN for BGP/EVPN).
+-   Network configuration: Ensure your underlay networking is working and **ifupdown2** is installed.
+-   [DHCP]({{< relref "20230531193526-dhcp.md" >}})/IPAM: PVE’s built-in IPAM/DHCP relies on [dnsmasq]({{< relref "2025-12-11-210104-dnsmasq.md" >}}), which currently does not support [EVPN](#what-is-evpn). For EVPN networks, use an external IPAM/DHCP source such as [NetBox: The Network Source of Truth]({{< relref "2025-11-30-174834-netbox.md" >}}) with [Kea DHCP]({{< relref "2025-12-11-210940-kea_dhcp.md" >}}); see [Enable DHCP Controller](#enable-dhcp--20230531193526-dhcp-dot-md--controller).
+-   [Domain Name Service (DNS)]({{< relref "20230417083145-dns.md" >}}) (optional): If you want automatic DNS registration for guests, configure a DNS integration (for example [PowerDNS]({{< relref "2024-05-25-025431-powerdns.md" >}})). This is typically paired with external IPAM.
 
 
 ## Step-by-Step Guide {#step-by-step-guide}
 
-Below, will based on my [Data Center Testbed]({{< relref "2025-04-10-010004-data_center_testbed_design.md" >}}).
+The steps below are based on my [Data Center Testbed]({{< relref "2025-04-10-010004-data_center_testbed_design.md" >}}).
 
 
 ### ASNs and roles {#asns-and-roles}
 
--   [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) edge (both routers): ASN 65001
-    -   R0 Main Gateway (connected to UVA's CS): 192.168.1.5/24
-    -   R1 T470s (backup): 192.168.1.2/24
-    -   R2 T420s (backup): 192.168.1.3/24
-    -   VRRP LAN GW: 192.168.1.4/24
+-   [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) edge (all routers): ASN 65001
+    -   R0 (primary): 192.168.1.5/24
+    -   R1 (backup): 192.168.1.2/24
+    -   R2 (backup): 192.168.1.3/24
+    -   VRRP LAN GW (VIP): 192.168.1.4/24
 -   PVE EVPN fabric (all Proxmox nodes): ASN 65010
     -   DIY: 192.168.1.11/24
     -   T470s PVE: 192.168.1.12/24
@@ -51,10 +53,10 @@ Below, will based on my [Data Center Testbed]({{< relref "2025-04-10-010004-data
     -   GPU PC: 192.168.1.14/24
     -   Dell R730: 192.168.1.15/24
 
-Peer to real router IPs (1.2 &amp; 1.3 &amp; 1.5), not the VRRP VIP, for BGP stability.
+Peer with the routers’ real IPs (\`192.168.1.2\`, \`192.168.1.3\`, \`192.168.1.5\`), not the VRRP VIP (\`192.168.1.4\`), to avoid BGP session churn during failover.
 
 
-### VyOS [BGP]({{< relref "20230608230531-bgp.md" >}}) configs (on treble gateways; same neighbors; only router-id differs) {#vyos-bgp--20230608230531-bgp-dot-md--configs--on-treble-gateways-same-neighbors-only-router-id-differs}
+### VyOS [BGP]({{< relref "20230608230531-bgp.md" >}}) configs (on three gateways; same neighbors; only \`router-id\` differs) {#vyos-bgp--20230608230531-bgp-dot-md--configs--on-three-gateways-same-neighbors-only-router-id-differs}
 
 
 #### R0 {#r0}
@@ -154,6 +156,7 @@ commit; save
 #### R2 {#r2}
 
 ```bash
+configure
 set protocols bgp system-as 65001
 set protocols bgp parameters router-id '192.168.1.3'
 # eBGP neighbors (your PVE nodes in ASN 65010)
@@ -204,24 +207,14 @@ show ip bgp summary
 ```
 
 
-### Prereqs on each PVE node (one-time) {#prereqs-on-each-pve-node--one-time}
+### PVE-side configuration {#pve-side-configuration}
 
-```bash
-apt update && apt install -y frr frr-pythontools
-systemctl restart frr
-systemctl status frr
-```
+Use a single EVPN controller with explicit peers (no SDN Fabric), and separate BGP controllers on your exit nodes for the VyOS eBGP sessions.
 
 
-### PVE side configure {#pve-side-configure}
+#### Create an EVPN Controller {#create-an-evpn-controller}
 
-Use a single EVPN controller with explicit Peers (no SDN Fabric), and separate BGP controllers on your exit nodes for the VyOS eBGP peering.
-
-
-#### Create a EVPN Controller {#create-a-evpn-controller}
-
-Open the Proxmox Admin web UI.
-Navigate to Datacenter &gt; SDN &gt; Options → Controllers → Add → EVPN
+Open the Proxmox web UI and navigate to Datacenter → SDN → Options → Controllers → Add → EVPN.
 
 -   ID: evpn
 -   ASN #: 65010
@@ -232,18 +225,17 @@ Navigate to Datacenter &gt; SDN &gt; Options → Controllers → Add → EVPN
 
 #### Add BGP controllers for the VyOS edge (eBGP) on your exit node(s) {#add-bgp-controllers-for-the-vyos-edge--ebgp--on-your-exit-node--s}
 
-node(s) that will be your “exit nodes.”
+Create BGP controllers on the node(s) that will act as your “exit nodes.”
 
 BGP controller #1 (server5)
 
 -   Node: server5
 -   ASN #: 65010
 -   Peers: 192.168.1.5, 192.168.1.2, 192.168.1.3 (your VyOS R0/R1/R2)
--   EBGP: ✅ enabled
--   Loopback Interface: (leave empty) — you’re peering to VyOS on the same LAN, not via loopbacks
--   ebgp-multihop: (off) — directly connected, TTL=1 is fine
--   bgp-multipaths-as-path-relax:
--   leave off if you want a single preferred egress (use MED on VyOS + “Primary Exit Node” in the zone); turn on only if you want ECMP (active/active) egress
+-   EBGP: enabled
+-   Loopback Interface: leave empty (peering on the same LAN, not via loopbacks)
+-   ebgp-multihop: leave off unless you are peering via loopbacks or across routed hops
+-   bgp-multipath-as-path-relax: leave off for a single preferred egress; enable only if you want ECMP (active/active) egress
 -   Click Add.
 
 BGP controller #2 (server2)
@@ -253,43 +245,69 @@ BGP controller #2 (server2)
 
 #### Enable [DHCP]({{< relref "20230531193526-dhcp.md" >}}) Controller {#enable-dhcp--20230531193526-dhcp-dot-md--controller}
 
-To automatically assign IPs to VMs and register them in [PowerDNS]({{< relref "2024-05-25-025431-powerdns.md" >}}), you need a DHCP controller.
+If you want automatic IP assignment and DNS registration (for example with [PowerDNS]({{< relref "2024-05-25-025431-powerdns.md" >}})), you need an IPAM/DHCP workflow.
+However, PVE’s built-in DHCP controller is [dnsmasq]({{< relref "2025-12-11-210104-dnsmasq.md" >}})-based, and [dnsmasq]({{< relref "2025-12-11-210104-dnsmasq.md" >}}) does not support [EVPN](#what-is-evpn).
 
-1.  **Install dnsmasq on all Proxmox nodes**:
+1.  **(Optional)** Install [dnsmasq]({{< relref "2025-12-11-210104-dnsmasq.md" >}}) on all Proxmox nodes (needed for non-EVPN SDN DHCP use-cases):
     ```bash
     apt install dnsmasq
     systemctl disable --now dnsmasq
     ```
     **Note**: We disable the default instance to avoid conflicts; Proxmox SDN manages its own instances.
 
-2.  Setting up [NetBox]({{< relref "2025-11-30-174834-netbox.md" >}}) or [phpIPAM]({{< relref "2025-11-30-223655-phpipam.md" >}})
+2.  For EVPN VNets, set up external IPAM/DHCP (recommended: [NetBox]({{< relref "2025-11-30-174834-netbox.md" >}}); alternative: [phpIPAM]({{< relref "2025-11-30-223655-phpipam.md" >}})) and integrate it via Proxmox SDN.
+
+[Proxmox VE DHCP Relay for EVPN]({{< relref "2025-12-17-193415-proxmox_ve_dhcp_relay_for_evpn.md" >}})
 
 
 ### Create an EVPN Zone {#create-an-evpn-zone}
 
 1.  Datacenter → SDN → Zones → Add → EVPN
-
-2, Fill the dialog:
-
--   ID: evpntest (≤ 8 chars, lowercase, no spaces/dashes)
--   Controller: evpn (the EVPN controller you already created)
--   VRF-VXLAN: 10000 (any unique number; this is the VRF identifier for the zone)
--   MTU: 1450 (good default for VXLAN)
--   Advertise Subnets: ✓ (so your EVPN subnet routes are exported into BGP type-5)
--   Exit Nodes: select server5, server2 (these are the nodes that peer via BGP controllers to VyOS)
--   Primary Exit Node: server5 (matches your preferred egress; also prefer R0 on VyOS with a lower MED if you want)
--   IPAM: pve
--   (Optional) Route-Target Import: leave empty for now (set later if you want inter-VRF route leaking)
--   Click Add.
--   Apply the SDN config:
+2.  Fill the dialog:
+3.  ID: evpntest (≤ 8 chars, lowercase, no spaces/dashes)
+4.  Controller: evpn (the EVPN controller you already created)
+5.  VRF-VXLAN: 10000 (any unique number; this is the VRF identifier for the zone)
+6.  MTU: 1450 (good default for VXLAN)
+7.  Advertise Subnets: ✓ (so your EVPN subnet routes are exported into BGP type-5)
+8.  Exit Nodes: select server5, server2 (these are the nodes that peer via BGP controllers to VyOS)
+9.  Primary Exit Node: server5 (matches your preferred egress; also prefer R0 on VyOS with a lower MED if you want)
+10. IPAM: \`pve\` (local IPAM) or \`nnetbox\` (if you integrated NetBox)
+11. (Optional) Route-Target Import: leave empty for now (set later if you want inter-VRF route leaking)
+12. Click Add.
+13. Apply the SDN config:
 
 Datacenter → SDN → Options → Apply
-(or run pvesh set /cluster/sdn --apply 1 on a node)
+or run the following on any node:
+
+```bash
+pvesh set /cluster/sdn
+```
+
+
+#### Verify Configuration {#verify-configuration}
+
+```console
+root@server5:~# cat /etc/pve/sdn/zones.cfg
+evpn: evpntest
+        controller evpn
+        vrf-vxlan 10000
+        advertise-subnets 1
+        dns powerdns1
+        dnszone pve.internal.lab
+        exitnodes server2,server5
+        exitnodes-primary server5
+        ipam netbox
+        mac BC:24:11:B6:FE:2C
+        mtu 1450
+        reversedns powerdns1
+
+root@server5:~#
+```
 
 
 ### Create a VXLAN VNet {#create-a-vxlan-vnet}
 
-In the Proxmox Admin web UI, navigate to Datacenter &gt; SDN &gt; VNets.
+In the Proxmox web UI, navigate to Datacenter → SDN → VNets.
 
 -   Click Add.
 -   Fill the dialog:
@@ -300,26 +318,52 @@ In the Proxmox Admin web UI, navigate to Datacenter &gt; SDN &gt; VNets.
 (Leave other fields at defaults)
 
 
+#### Verify Configuration {#verify-configuration}
+
+```console
+root@server5:~# cat /etc/pve/sdn/vnets.cfg
+vnet: testnet1
+        zone evpntest
+        tag 100
+
+root@server5:~#
+```
+
+
 ### Add Subnets within Your VNet {#add-subnets-within-your-vnet}
 
 1.  In SDN → VNets, click your new VNet row testnet1 to select it.
 2.  Click Create → Subnet (or Add → Subnet, depending on your build).
 3.  Fill the dialog:
 4.  Subnet: 10.60.10.0/24
-5.  Gateway: 10.60.10.1 -&gt; Proxmox will install 10.60.10.1 as the anycast VRF gateway on the EVPN fabric. Advertise 10.60.10.0/24 to VyOS via BGP (because you enabled “Advertise Subnets” in the EVPN zone).
-6.  SNAT: tick this, the PVE exit node will masquerade/NAT this subnet to its own uplink. If you don’t want that because VyOS is your Internet gateway doing NAT. Enabling it would create double-NAT/confusion. You should set [Internet access / NAT for EVPN subnet](#internet-access-nat-for-evpn-subnet) on VyOS.
+5.  Gateway: 10.60.10.1 (Proxmox will install this as an anycast VRF gateway on the EVPN fabric, and it will advertise 10.60.10.0/24 to VyOS via BGP if “Advertise Subnets” is enabled in the zone)
+6.  SNAT: enable only if you want the Proxmox exit nodes to NAT this subnet; if VyOS is your Internet gateway doing NAT, leave this unchecked and configure [Internet access / NAT for EVPN subnet](#internet-access-nat-for-evpn-subnet) on VyOS to avoid double NAT
 7.  DNS Zone Prefix: (optional, only if you configured a DNS plugin under SDN → DNS, e.g., [PowerDNS]({{< relref "2024-05-25-025431-powerdns.md" >}}))
 8.  DHCP Ranges (optional)
-    -   If you want Proxmox to hand out DHCP for this VNet, add a range, e.g.: Start: 10.60.10.100 End: 10.60.10.199
+    -   If you want Proxmox to hand out DHCP for this VNet, add a range, e.g.: Start: 10.60.10.100 End: 10.60.10.200
     -   If you prefer static addressing or cloud-init, don’t add a range (no DHCP will run for this subnet).
 
 Click OK, then go to Datacenter → SDN → Options → Apply.
 
 
+#### Verify Configuration {#verify-configuration}
+
+```console
+root@server5:~# cat /etc/pve/sdn/subnets.cfg
+subnet: evpntest-10.60.10.0-24
+        vnet testnet1
+        dhcp-range start-address=10.60.10.100,end-address=10.60.10.200
+        dnszoneprefix vnet01
+        gateway 10.60.10.1
+        snat 1
+
+root@server5:~#
+```
+
+
 ### Apply SDN Changes {#apply-sdn-changes}
 
-In the Proxmox Admin web UI, go to Datacenter &gt; SDN.
-Click on Apply to propagate the changes across all nodes.
+In the Proxmox web UI, go to Datacenter → SDN and click Apply to propagate the changes across all nodes.
 
 
 ### Quick sanity checks {#quick-sanity-checks}
@@ -333,8 +377,7 @@ root@server5:~# ip link show type vrf
 ```
 
 ```console
-root@server5:~# ip -4 route show vrf vrf_evpntest | grep -E '10\.60\.1
-0\.0/24|default'
+root@server5:~# ip -4 route show vrf vrf_evpntest | grep -E '10\.60\.10\.0/24|default'
 10.60.10.0/24 dev testnet1 proto kernel scope link src 10.60.10.1
 ```
 
@@ -398,8 +441,7 @@ evpn: evpn
 
 ```
 
-Ensure the EVPN and VXLAN configurations are correctly applied.
-Check the status of the BGP sessions and routing tables using FRRouting commands:
+Confirm that the EVPN/VXLAN configuration is applied, then check BGP sessions and tables with FRRouting:
 
 ```console
 root@server5:~# vtysh -c "show bgp summary"
@@ -483,7 +525,7 @@ ping -c3 192.168.1.5       # VyOS R0 (via EVPN → BGP → VyOS)
 ping -c3 8.8.8.8           # Internet reachability via VyOS (if default route is advertised)
 ```
 
-If these pings work and \`vtysh -c 'show bgp ipv4 unicast'\` on \`server5\` shows \`10.60.10.0/24\` learned/advertised as expected, your VM is successfully using the EVPN-backed subnet.
+If these pings work and \`vtysh -c 'show bgp ipv4 unicast'\` on \`server5\` shows \`10.60.10.0/24\` as learned/advertised as expected, the VM is successfully using the EVPN-backed subnet.
 
 
 ### Internet access / NAT for EVPN subnet {#internet-access-nat-for-evpn-subnet}
@@ -504,7 +546,7 @@ The next-hop should be one of your Proxmox exit nodes (for example \`server5\`),
 
 #### Add source NAT on VyOS for 10.60.10.0/24 {#add-source-nat-on-vyos-for-10-dot-60-dot-10-dot-0-24}
 
-On the primary VyOS router (R0 at 192.168.1.5), add a source NAT rule that translates \`10.60.10.0/24\` to the router’s WAN address. Adjust \`WAN_IF\` below to your real uplink interface (for example \`eth0\`, \`pppoe0\`, etc.) and pick a free rule number:
+On the primary VyOS router (R0 at 192.168.1.5), add a source NAT rule that translates **10.60.10.0/24** to the router’s WAN address. Adjust **WAN_IF** below to your real uplink interface (for example **eth0**, **pppoe0**, etc.) and pick a free rule number:
 
 ```bash
 configure
@@ -523,15 +565,17 @@ If you also want R1/R2 to provide Internet during failover, mirror the same \`na
 
 #### Re-test from the EVPN VM {#re-test-from-the-evpn-vm}
 
-From the VM at \`10.60.10.20\`:
+From the VM at **10.60.10.20**:
 
 ```console
 ping -c3 8.8.8.8
 ```
 
-If this now succeeds while \`ping\` to \`10.60.10.1\` and \`192.168.1.5\` still works, you have full Internet access for the EVPN-backed subnet using NAT at VyOS instead of Proxmox.
+If this now succeeds while **ping** to **10.60.10.1** and **192.168.1.5** still works, you have full Internet access for the EVPN-backed subnet using NAT at VyOS instead of Proxmox.
 
 
 ## Reference List {#reference-list}
 
 1.  <https://bennetgallein.de/blog/setting-up-evpn-on-proxmox-sdn-a-comprehensive-guide>
+2.  <https://homelab.casaursus.net/setup-sdn-2/>
+3.  <https://github.com/proxmox/pve-network>

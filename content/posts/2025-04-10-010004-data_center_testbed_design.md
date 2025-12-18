@@ -89,18 +89,23 @@ Topology overview: a dedicated management network for iDRAC access and PVE web U
 
 -   Hostname: server1.testbed.com
 -   IP: 192.168.1.11/24
--   Gateway: 192.168.1.1
+-   Gateway: 192.168.1.4
 -   DNS: 192.168.1.1
+-   Hard Disks:
+    -   SanDisk (PVE: local and local-lvm): SIZE - 238.5G; MODEL - CWDISK 256G; SERIAL - J150404B07502
+    -   Western Digital (Not in used): SIZE - 1.8T; MODEL - WDC WD20EFAX-68FB5N0; SERIAL - WD-WX91A19E6J3N
 
 
 #### T470s {#t470s}
 
 -   Hostname: server2.testbed.com
 -   IP: 192.168.1.12/24
--   Gateway: 192.168.1.1
+-   Gateway: 192.168.1.4
 -   DNS: 192.168.1.1
+-   Hard Disks:
+    -   SAMSUNG (PVE: local and local-lvm): SIZE - 238.5G; MODEL - MZVLW256HEHP-000L7; SERIAL - S35ENA1K581888
 
-Wi‑Fi card:
+Wi‑Fi card ([proxmox PCI passthrough]({{< relref "2025-09-23-212735-proxmox_pci_passthrough.md" >}}) for [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) Gateway):
 
 -   Description: Wireless interface
 -   Product: Intel Wireless 8260
@@ -114,15 +119,17 @@ Wi‑Fi card:
 
 -   Hostname: server3.testbed.com
 -   IP: 192.168.1.13/24
--   Gateway: 192.168.1.1
+-   Gateway: 192.168.1.4
 -   DNS: 192.168.1.1
+-   Hard Disks:
+    -   INTEL (PVE: local and local-lvm): SIZE - 223.6G; MODEL - SSDSC2KW240H6; SERIAL - CVLT627101DQ240CGN
 
 3G card:
 
 -   Logical name: wwp0s29u1u4
 -   MAC: ba:49:c2:37:84:ee
 
-Wi‑Fi card:
+Wi‑Fi card ([proxmox PCI passthrough]({{< relref "2025-09-23-212735-proxmox_pci_passthrough.md" >}}) for [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) Gateway):
 
 -   Model: Centrino Advanced‑N 6205 [Taylor Peak]
 -   Vendor: Intel Corporation
@@ -134,18 +141,26 @@ Wi‑Fi card:
 
 -   Hostname: server4.testbed.com
 -   IP: 192.168.1.14/24
--   Gateway: 192.168.1.1
+-   Gateway: 192.168.1.4
 -   DNS: 192.168.1.1
 -   GPU: Nvidia GeForce RTX 2070
+-   Hard Disks:
+    -   HGST Ultrastar (PVE: local and local-lvm): SIZE - 465.8G; MODEL - HUSMR1650ASS201; SERIAL - 0QY10YMA
+    -   [ZFS]({{< relref "20230517124043-zfs.md" >}}):
+        -   sdb    1.1T **X425_STBTE1T2A10** Z4005ZAH sas
+        -   sdc    1.1T **X425_STBTE1T2A10** S400N4TC sas
+        -   sdd    1.1T **X425_STBTE1T2A10** Z40053QL sas
 
 
 #### Dell R730 Server {#dell-r730-server}
 
 -   Hostname: server5.testbed.com
 -   IP: 192.168.1.15/24
--   Gateway: 192.168.1.1
+-   Gateway: 192.168.1.4
 -   DNS: 192.168.1.1
 -   GPU: NVIDIA Corporation GK104GL [GRID K2]
+-   Hard Disks:
+    -   Crucial (PVE: local and local-lvm): SIZE - 465.8G; MODEL - CT500P1SSD8; SERIAL - 1942E223FD79
 
 
 ## Services {#services}

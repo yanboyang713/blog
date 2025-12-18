@@ -1,10 +1,10 @@
 ---
-title: "install OKD on Proxmox"
+title: "Deploying OKD Single Node on Proxmox"
 draft: false
 ---
 
-[OKD]({{< relref "20230518171737-okd.md" >}})
-[Proxmox VE]({{< relref "20230228043925-proxmox_ve.md" >}})
+This guide documents the complete setup of [OKD]({{< relref "20230518171737-okd.md" >}}) (The Community Distribution of [Kubernetes]({{< relref "20230105185343-kubernetes.md" >}}) that powers Red Hat OpenShift) as a Single Node Operator (SNO) cluster on a virtual machine hosted by [Proxmox VE]({{< relref "20230228043925-proxmox_ve.md" >}}).
+
 [OKD Bootstrap]({{< relref "2024-05-24-051502-okd_bootstrap.md" >}})
 
 
@@ -57,3 +57,5 @@ master2.okd             IN      A       192.168.88.11
 2.  <https://github.com/pvelati/okd-proxmox-scripts>
 3.  <https://github.com/pvelati/ansible-okd-proxmox>
 4.  <https://www.pivert.org/deploy-openshift-okd-on-proxmox-ve-or-bare-metal-tutorial/>
+5.  <https://andrearaponi.it/devops/deploy-okd-on-proxmox/>
+6.  <https://docs.okd.io/latest/installing/installing_platform_agnostic/installing-platform-agnostic.html>
