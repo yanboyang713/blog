@@ -10,9 +10,39 @@ This guide documents the complete setup of [OKD]({{< relref "20230518171737-okd.
 
 ## Prerequisites {#prerequisites}
 
+-   [Proxmox Testbed]({{< relref "2025-04-10-010004-data_center_testbed_design.md" >}}) with [[CPU virtualization (Intel VT-x / AMD-V)]({{< relref "2025-12-19-212625-hardware_virtualization.md#cpu-virtualization--intel-vt-x-amd-v" >}}) enabled in the BIOS/UEFI.
+-   Sufficient Resources:
+    -   CPU: Minimum 8 vCPUs recommended for SNO.
+    -   RAM: Minimum 32GB RAM recommended for SNO.
+    -   Storage: Minimum 120GB-150GB fast storage (SSD/NVMe) for the OKD VM.
+-   Administrative Machine (Client): A Linux machine (e.g., Ubuntu, Fedora) to run openshift-install, oc, podman, and other client tools. This will be referred to as your “Admin Client Machine”.
+-   Red Hat Pull Secret: Obtain a pull secret from [Red Hat OpenShift Cluster Manager](https://console.redhat.com/openshift/install/pull-secret) (a free Red Hat developer account is sufficient). This is needed for some certified operators and images.
+-   [PowerDNS]({{< relref "2024-05-25-025431-powerdns.md" >}})
+
 -   An SSH public key
 -   Admin access to the local DNS with reverse DNS (examples for [bind9]({{< relref "2024-05-25-015638-bind_9.md#bind9-settings" >}}))
--   RedHat account to get the Pull Secret, plase the key in a pullSecret.txt file.
+
+
+## Phase 1: Preparation on Admin Client Machine {#phase-1-preparation-on-admin-client-machine}
+
+All commands in this phase are executed on your Admin Client Machine (Disk: 20G; RAM: 8G; CPU: 2 cores).
+
+-   OS: Ubuntu 24.04
+-   IP: 192.168.1.50/24
+-   Gateway: 192.168.1.5
+-   PowerDNS:
+    -   DNS Domain: okd.admin.testbed.com
+    -   DNS Servers: 192.168.1.23
+
+
+### Set Environment Variables {#set-environment-variables}
+
+Define the OKD version and architecture for consistency.
+
+```bash
+export OKD_VERSION=4.20.0-okd-scos.13 # Check for the latest stable SCOS release
+export ARCH=x86_64
+```
 
 
 ## DNS {#dns}

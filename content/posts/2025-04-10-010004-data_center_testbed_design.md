@@ -146,10 +146,6 @@ Wi‑Fi card ([proxmox PCI passthrough]({{< relref "2025-09-23-212735-proxmox_pc
 -   GPU: Nvidia GeForce RTX 2070
 -   Hard Disks:
     -   HGST Ultrastar (PVE: local and local-lvm): SIZE - 465.8G; MODEL - HUSMR1650ASS201; SERIAL - 0QY10YMA
-    -   [ZFS]({{< relref "20230517124043-zfs.md" >}}):
-        -   sdb    1.1T **X425_STBTE1T2A10** Z4005ZAH sas
-        -   sdc    1.1T **X425_STBTE1T2A10** S400N4TC sas
-        -   sdd    1.1T **X425_STBTE1T2A10** Z40053QL sas
 
 
 #### Dell R730 Server {#dell-r730-server}
@@ -161,6 +157,10 @@ Wi‑Fi card ([proxmox PCI passthrough]({{< relref "2025-09-23-212735-proxmox_pc
 -   GPU: NVIDIA Corporation GK104GL [GRID K2]
 -   Hard Disks:
     -   Crucial (PVE: local and local-lvm): SIZE - 465.8G; MODEL - CT500P1SSD8; SERIAL - 1942E223FD79
+        -   [ZFS pool]({{< relref "20230517124043-zfs.md" >}}):
+            -   sdb    1.1T **X425_STBTE1T2A10** Z4005ZAH sas
+            -   sdc    1.1T **X425_STBTE1T2A10** S400N4TC sas
+            -   sdd    1.1T **X425_STBTE1T2A10** Z40053QL sas
 
 
 ## Services {#services}
