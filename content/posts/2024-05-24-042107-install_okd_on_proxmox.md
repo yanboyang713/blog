@@ -17,15 +17,13 @@ This guide documents the complete setup of [OKD]({{< relref "20230518171737-okd.
     -   Storage: Minimum 120GB-150GB fast storage (SSD/NVMe) for the OKD VM.
 -   Administrative Machine (Client): A Linux machine (e.g., Ubuntu, Fedora) to run openshift-install, oc, podman, and other client tools. This will be referred to as your “Admin Client Machine”.
 -   Red Hat Pull Secret: Obtain a pull secret from [Red Hat OpenShift Cluster Manager](https://console.redhat.com/openshift/install/pull-secret) (a free Red Hat developer account is sufficient). This is needed for some certified operators and images.
--   [PowerDNS]({{< relref "2024-05-25-025431-powerdns.md" >}})
-
+-   Admin access to the local [PowerDNS]({{< relref "2024-05-25-025431-powerdns.md" >}}) with reverse DNS
 -   An SSH public key
--   Admin access to the local DNS with reverse DNS (examples for [bind9]({{< relref "2024-05-25-015638-bind_9.md#bind9-settings" >}}))
 
 
 ## Phase 1: Preparation on Admin Client Machine {#phase-1-preparation-on-admin-client-machine}
 
-All commands in this phase are executed on your Admin Client Machine (Disk: 20G; RAM: 8G; CPU: 2 cores).
+All commands in this phase are executed on your Admin Client Machine VM, not [Linux Containers (LXC)]({{< relref "2023-12-03-143424-lxc.md" >}}) (Disk: 20G; RAM: 8G(8192M); CPU: 2 cores).
 
 -   OS: Ubuntu 24.04
 -   IP: 192.168.1.50/24

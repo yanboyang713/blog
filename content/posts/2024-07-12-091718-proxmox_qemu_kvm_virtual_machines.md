@@ -13,6 +13,8 @@ draft: false
 
 [KVM RISCV64 on QEMU]({{< relref "2024-07-12-090737-kvm_riscv64_on_qemu.md" >}})
 
+[cloud init]({{< relref "2025-12-12-081925-cloud_init.md" >}})
+
 
 ## Reference List {#reference-list}
 
