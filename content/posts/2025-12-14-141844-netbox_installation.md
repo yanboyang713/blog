@@ -136,7 +136,7 @@ To serve NetBox on port 80/443.
     ```
 
 3.  **Edit the Nginx Config**:
-    Edit \`/etc/nginx/sites-available/netbox\`. Change \`server_name\` to your IP or Domain.
+    Edit **/etc/nginx/sites-available/netbox**. Change **server_name** to your IP or Domain.
 
 4.  **Generate Self-Signed SSL Certificate**:
     The default config enables HTTPS, so you need a certificate.
