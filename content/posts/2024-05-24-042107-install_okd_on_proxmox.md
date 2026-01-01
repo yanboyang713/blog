@@ -353,7 +353,7 @@ dig +short console-openshift-console.apps.okd4sno.okd.lan @192.168.1.23
 ```
 
 
-### Set hostname {#set-hostname}
+### Set hostname (options, if you don't have DHCP server) {#set-hostname--options-if-you-don-t-have-dhcp-server}
 
 ```bash
 hostnamectl

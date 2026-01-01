@@ -22,7 +22,7 @@ This Proxmox VE–based, multi-node testbed supports research and prototyping ac
 ### Access {#access}
 
 -   Platform: All servers run [Proxmox VE]({{< relref "20230228043925-proxmox_ve.md" >}}) (Debian-based).
--   PVE web UI access from management Gateway: <https://172.27.135.44:8006/>
+-   PVE web UI access from management Gateway: <https://pve.yanboyang.com:8006/>
 
 
 ## Physical Topology and Components {#physical-topology-and-components}

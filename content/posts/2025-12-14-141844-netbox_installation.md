@@ -9,6 +9,38 @@ draft: false
 -   [NetBox: The Network Source of Truth]({{< relref "2025-11-30-174834-netbox.md" >}})
 
 
+## Using [Proxmox VE (PVE)]({{< relref "20230228043925-proxmox_ve.md" >}}) Helper-Script {#using-proxmox-ve--pve----20230228043925-proxmox-ve-dot-md--helper-script}
+
+
+### Installation {#installation}
+
+```bash
+var_net="192.168.1.26/24" \
+var_gateway="192.168.1.4" \
+var_ns="-nameserver=192.168.1.23" \
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/ct/netbox.sh)"
+```
+
+
+### Access {#access}
+
+<https://192.168.1.26>
+
+
+### Location of config file {#location-of-config-file}
+
+/opt/netbox/netbox/netbox/configuration.py
+
+
+### Show login and database credentials {#show-login-and-database-credentials}
+
+```bash
+cat netbox.creds
+```
+
+<https://community-scripts.github.io/ProxmoxVE/scripts?id=netbox>
+
+
 ## Setting Up NetBox (Ubuntu 24.04/22.04) {#setting-up-netbox--ubuntu-24-dot-04-22-dot-04}
 
 This guide walks you through installing NetBox directly on an Ubuntu LXC or VM ("bare metal" style).
