@@ -228,6 +228,10 @@ Notes:
 
 [Teleport]({{< relref "2025-11-19-164307-teleport.md" >}}) is the [bastion host]({{< relref "2025-12-04-183725-bastion_host.md" >}}).
 
+-   IP: 192.168.1.40/24
+-   Gateway IP: 192.168.1.4
+-   DNS: 192.168.1.23
+
 
 ## [Precision Time Protocol (PTP)]({{< relref "2024-05-20-050327-precision_time_protocol_ptp.md" >}}) Synchronization {#precision-time-protocol--ptp----2024-05-20-050327-precision-time-protocol-ptp-dot-md--synchronization}
 
