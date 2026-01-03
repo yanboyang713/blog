@@ -19,23 +19,34 @@ This Proxmox VE–based, multi-node testbed supports research and prototyping ac
 -   Ensure safe access via a dedicated management network using [iDRAC]({{< relref "2025-03-19-000630-integrated_dell_remote_access_controller_idrac.md" >}}) and [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) gear.
 
 
-### Access {#access}
+### Access platform and VMs {#access-platform-and-vms}
+
+
+#### Platform {#platform}
 
 -   Platform: All servers run [Proxmox VE]({{< relref "20230228043925-proxmox_ve.md" >}}) (Debian-based).
 -   PVE web UI access from management Gateway: <https://pve.yanboyang.com:8006/>
+
+
+#### [Virtual Machine (VM)]({{< relref "2025-12-12-081925-cloud_init.md" >}}) {#virtual-machine--vm----2025-12-12-081925-cloud-init-dot-md}
+
+-   From [Proxmox VE (PVE)]({{< relref "20230228043925-proxmox_ve.md" >}}) Web
+-   Use [SPICE (Simple Protocol for Independent Computing Environments)]({{< relref "2025-05-04-035528-spice.md#download-a-fresh-id-0407235a-6de7-47de-93a8-074cff1b35ae-spice--simple-protocol-for-independent-computing-environments--dot-vv-file-and-connect" >}})
 
 
 ## Physical Topology and Components {#physical-topology-and-components}
 
 {{< figure src="https://res.cloudinary.com/dkvj6mo4c/image/upload/v1764729697/testbed_2_wlunjv.png" >}}
 
-Topology overview: a dedicated management network for iDRAC access and PVE web UI access; a Proxmox VE LAN with dual VyOS WWAN gateways; EVPN overlays for tenant/lab networks; and a Kubernetes/OKD cluster for Aether 5G.
+Topology overview: a dedicated management network for iDRAC access and PVE web UI access; a Proxmox VE LAN with dual VyOS WWAN gateways and one Wired gateway to CS network; EVPN overlays for tenant/lab networks; and a Kubernetes/OKD cluster for Aether 5G.
 
 
 ### Management Network {#management-network}
 
+[MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) cAP ax is the only one Internet NAT. No NAT between the two private LANs (192.168.1.x and 192.168.88.x) on [Proxmox VE (PVE) main switch MikroTik L009UiGS-RM](#proxmox-ve--pve----20230228043925-proxmox-ve-dot-md--main-switch-mikrotik--20230226101927-mikrotik-dot-md--l009uigs-rm--20230728212918-l009uigs-rm-dot-md).
 
-#### [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) cAP ax {#mikrotik--20230226101927-mikrotik-dot-md--cap-ax}
+
+#### [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) cAP ax (Gateway between Management Network and "wahoo") {#mikrotik--20230226101927-mikrotik-dot-md--cap-ax--gateway-between-management-network-and-wahoo}
 
 -   Model: cAPGi-5HaxD2HaxD-US
 -   FCC ID: TV7CPG52X; IC: 7442A-CAPAX
@@ -45,8 +56,8 @@ Topology overview: a dedicated management network for iDRAC access and PVE web U
 -   Serial: HF2098EMRR7/343/US
 -   Wi‑Fi1 joins hidden SSID “[wahoo]({{< relref "2025-08-08-101821-uva_eduroam_wireless_network_under_linux.md#wahoo" >}})” as a station and obtains an IP from the UVA Wi‑Fi DHCP (current: 172.27.135.44).
 -   Bridge groups ether1, ether2, and Wi‑Fi2 as LAN; bridge IP: 192.168.88.1/24; NAT to Wi‑Fi1.
--   [Port‑forward]({{< relref "2025-08-15-212717-routeros_port_forward_from_lan_to_wan.md" >}}) TCP 8006 from WAN (Wi‑Fi1) to 192.168.88.2.
--   Wi‑Fi2 provides LAN SSID \`myLAN\`.
+-   [Port‑forward]({{< relref "2025-08-15-212717-routeros_port_forward_from_lan_to_wan.md" >}}) TCP 8006 from WAN (Wi‑Fi1) to 192.168.1.11
+-   Wi‑Fi2 provides LAN SSID **LAN-WiFi**.
 -   Details: [cAP ax setup details (step by step)]({{< relref "2025-08-21-125051-cap_ax_setup_details_step_by_step.md" >}})
 
 
@@ -63,17 +74,9 @@ Topology overview: a dedicated management network for iDRAC access and PVE web U
 ### [Proxmox VE]({{< relref "20230228043925-proxmox_ve.md" >}}) Cluster Network {#proxmox-ve--20230228043925-proxmox-ve-dot-md--cluster-network}
 
 
-#### [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) L009UiGS-RM {#mikrotik--20230226101927-mikrotik-dot-md--l009uigs-rm}
+#### [Proxmox VE (PVE)]({{< relref "20230228043925-proxmox_ve.md" >}}) main switch [MikroTik]({{< relref "20230226101927-mikrotik.md" >}}) [L009UiGS-RM]({{< relref "20230728212918-l009uigs_rm.md" >}}) {#proxmox-ve--pve----20230228043925-proxmox-ve-dot-md--main-switch-mikrotik--20230226101927-mikrotik-dot-md--l009uigs-rm--20230728212918-l009uigs-rm-dot-md}
 
 -   Serial: HFE097YP05K/346
-
-<!--list-separator-->
-
--  WAN
-
-    -   IP: 192.168.88.2/24
-    -   Netmask: 255.255.255.0
-    -   DNS: 8.8.8.8, 8.8.4.4
 
 <!--list-separator-->
 
@@ -82,7 +85,9 @@ Topology overview: a dedicated management network for iDRAC access and PVE web U
     -   Gateway/LAN IP: 192.168.1.1/24
     -   Netmask: 255.255.255.0
 
-    [Port‑forward]({{< relref "2025-08-15-212717-routeros_port_forward_from_lan_to_wan.md" >}}) TCP 8006 from WAN to 192.168.1.11 (PVE on server1).
+    -   No WAN
+    -   No masquerade NAT. Also, does not any NAT.
+    -   Details: [main switch details]({{< relref "2026-01-03-030500-main_switch_details.md" >}})
 
 
 #### DIY server {#diy-server}
@@ -222,15 +227,6 @@ Notes:
 1.  DNS: [BIND 9]({{< relref "2024-05-25-015638-bind_9.md" >}}) provides external DNS records for Kubernetes control-plane nodes. The cluster uses internal DNS (e.g., CoreDNS) for pods and services.
 2.  Networking: CNI is Cilium (eBPF). The cluster network is separate from the physical topology; use [BGP]({{< relref "20230608230531-bgp.md" >}}) if advertising pod/service CIDRs to the underlay is required.
 3.  Load Balancer: HAProxy fronts the Kubernetes API and balances across control-plane nodes.
-
-
-## [Bastion Host]({{< relref "2025-12-04-183725-bastion_host.md" >}}) {#bastion-host--2025-12-04-183725-bastion-host-dot-md}
-
-[Teleport]({{< relref "2025-11-19-164307-teleport.md" >}}) is the [bastion host]({{< relref "2025-12-04-183725-bastion_host.md" >}}).
-
--   IP: 192.168.1.40/24
--   Gateway IP: 192.168.1.4
--   DNS: 192.168.1.23
 
 
 ## [Precision Time Protocol (PTP)]({{< relref "2024-05-20-050327-precision_time_protocol_ptp.md" >}}) Synchronization {#precision-time-protocol--ptp----2024-05-20-050327-precision-time-protocol-ptp-dot-md--synchronization}

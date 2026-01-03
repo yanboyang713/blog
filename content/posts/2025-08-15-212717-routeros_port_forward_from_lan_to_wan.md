@@ -16,7 +16,7 @@ Example: expose tcp/8006 on WAN to 192.168.1.11:8006 on LAN:
 /ip firewall nat add chain=dstnat \
   in-interface-list=WAN \
   protocol=tcp dst-port=8006 \
-  action=dst-nat to-addresses=192.168.1.11 to-ports=8006
+  action=dst-nat to-addresses=192.168.1.11 to-ports=8006 \
   comment="Port forward 8006 from WAN → 192.168.1.11"
 ```
 
