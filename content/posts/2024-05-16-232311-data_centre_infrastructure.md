@@ -15,6 +15,8 @@ draft: false
 
 [Z390 PLUS]({{< relref "2023-12-20-184204-z390_plus.md" >}})
 
+[Data Center Testbed]({{< relref "2025-04-10-010004-data_center_testbed_design.md" >}})
+
 
 ## Dell PowerEdge R730 {#dell-poweredge-r730}
 

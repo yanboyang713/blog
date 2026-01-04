@@ -4,28 +4,48 @@ date: 2025-11-04
 draft: false
 ---
 
-## What are Small Language Models? {#what-are-small-language-models}
+## Overview {#overview}
 
-Small Language Models (SLMs) are lightweight versions of traditional language models designed to operate efficiently on resource-constrained environments such as smartphones, embedded systems, or low-power computers. While large language models have hundreds of billions—or even trillions—of parameters, SLMs typically range from 1 million to 10 billion parameters. The small language models are significantly smaller but they still retain core NLP capabilities like text generation, summarization, translation, and question-answering.
+Small Language Models (SLMs) are relatively lightweight language models designed to run efficiently in resource-constrained environments (e.g., laptops, smartphones, embedded/edge devices, or low-power servers).
 
-"Some practitioners don't like the term "Small Language Model", because a billion parameter is not small by any means. They prefer "Small [Large Language Models]({{< relref "2023-12-01-141658-llms.md" >}})", which sounds convoluted. But the majority went with Small Language Model, so SLM it is. By the way, note that it is only small in comparison with the large models.
+Compared to frontier [Large Language Models (LLMs)]({{< relref "2023-12-01-141658-llms.md" >}}), SLMs typically use fewer parameters (commonly from ~1B up to ~10B) and smaller runtime footprints, while still supporting core NLP capabilities such as text generation, summarization, translation, and question answering.
 
 
-## Examples of Small Language Models {#examples-of-small-language-models}
+## Terminology {#terminology}
 
-Several small yet powerful language models have emerged, proving that size isn’t everything. The following examples are SLMs ranging from 1-4 billion parameters:
+> Some practitioners dislike the term “Small Language Model” because a billion parameters is not “small” in an absolute sense. Alternatives like “small LLM” exist, but “SLM” is widely used in practice.
 
--   Llama3.2-1B – A Meta-developed 1-billion-parameter variant optimized for edge devices.
--   Qwen2.5-1.5B – A model from Alibaba designed for multilingual applications with 1.5 billion parameters.
--   DeepSeeek-R1-1.5B - DeepSeek's first-generation of reasoning model distilled from Qwen2.5 with 1.5 billion parameters.
--   SmolLM2-1.7B – From HuggingFaceTB, a state-of-the-art "small" (1.7 billion-parameter) language model trained on specialized open datasets (FineMath, Stack-Edu, and SmolTalk).
--   Phi-3.5-Mini-3.8B – Microsoft's tiny-but-might open model with 3.8 billion-parameters optimized for reasoning and code generation.
--   [Gemma]({{< relref "2025-04-19-013506-google_gemma.md" >}})3-4B - Developed by Google DeepMind, this light but powerful 4 billion-parameter model is multilingual and multimodal.
+
+## Why Use SLMs? {#why-use-slms}
+
+-   Lower inference cost (memory, compute, power)
+-   Lower latency (especially on-device)
+-   Easier deployment in constrained environments
+-   Potentially improved privacy when running locally (depending on the application)
+
+
+## Trade-offs {#trade-offs}
+
+-   Lower ceiling on capability compared to larger models (reasoning, long-context, tool use)
+-   More sensitivity to data quality and training recipe
+-   Smaller models may require tighter prompting, finetuning, or retrieval to match task requirements
+
+
+## Examples {#examples}
+
+Examples of commonly cited SLMs (~1–4B parameters):
+
+-   `Llama 3.2 1B` (Meta)
+-   `Qwen 2.5 1.5B` (Alibaba)
+-   `DeepSeek-R1 1.5B` (DeepSeek; distilled from Qwen 2.5)
+-   `SmolLM2 1.7B` (HuggingFaceTB)
+-   `Phi-3.5 Mini 3.8B` (Microsoft)
+-   [Gemma]({{< relref "2025-04-19-013506-google_gemma.md" >}}) (e.g., 4B-class variants)
 -   [minimind]({{< relref "2025-11-04-234842-minimind.md" >}})
 
-Here are other more powerful small language models available out there: Mistral 7B, Gemma 9B, and Phi-4 14B (though I'm not sure if Phi-4 with 14 Billion parameters still qualifies as "small" but it's so capable :)
+Other **small but strong** models sometimes mentioned include `Mistral 7B`, `Gemma 9B`, and `Phi-4 14B` (depending on your definition of “small”).
 
 
-## Reference List {#reference-list}
+## References {#references}
 
-1.  <https://huggingface.co/blog/jjokah/small-language-model>
+-   [Hugging Face blog: Small language model](https://huggingface.co/blog/jjokah/small-language-model)

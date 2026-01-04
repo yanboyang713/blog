@@ -17,83 +17,84 @@ title: Welcome to Boyang Yan's Website
 
 ## Areas of Interest
 - [Computer Networks](posts/2024-05-24-034608-networking)
-- Networked Systems
+- [Networked Systems](posts/2026-01-03-223923-networked_systems)
 - [Anomaly Detection](posts/20230404190313-anomaly_detection)
-- Network Measurement
+- [Network Measurement](posts/2025-11-05-041036-network_measurement)
 - [Cloud Computing](posts/2023-10-09-180437-cloud_computing)
 - [Time Series Analysis](posts/20230404184340-time_series)
-
 ---
 
 ## Summary
-My research spans computer networks and distributed systems, with a focus on network measurement, anomaly detection, and cloud computing. I aim to improve the observability, performance, and reliability of modern networked systems. Currently, I’m exploring AIOps powered by large language models (LLMs) and building tools for real-world network analysis, troubleshooting, and optimization. Recent projects include programmable networking, workload prediction on P4-programmable switches, and scalable network-monitoring architectures.
+My research spans computer networks and distributed systems, with an emphasis on [network measurement](posts/2025-11-05-041036-network_measurement), [anomaly detection](posts/20230404190313-anomaly_detection), [root-cause analysis](posts/2025-04-22-090350-root_cause_analysis), and [cloud computing](posts/2023-10-09-180437-cloud_computing). I develop data-driven methods to improve the cost-effectiveness, reliability, and performance of modern networked systems. My current work focuses on self-driving cellular networks, leveraging [small language models](posts/2025-11-04-233701-small_language_models_slms) and time-series analysis for closed-loop monitoring and control.
 
-I hold a Master’s degree in Statistics and Operations Research from RMIT University (Royal Melbourne Institute of Technology), Australia, and a Bachelor’s degree in Computer Science from the University of Wollongong, Australia. I bring a strong background in network systems engineering, reinforced by hands-on experience in cloud infrastructure, time-series analysis, and software-defined networking. Prior to academia, I worked in industry on Azure cloud platforms and network function virtualization.
+I hold an M.S. in Statistics and Operations Research from RMIT University (Royal Melbourne Institute of Technology), Australia, and a B.S. in Computer Science from the University of Wollongong, Australia. I bring a strong background in network systems engineering, reinforced by hands-on experience in cloud infrastructure, time-series analysis, and software-defined networking. Before academia, I worked in industry, including with Microsoft Azure and at Peng Cheng Laboratory.
+
+I’m passionate about exploring new technologies and methodologies and eager to tackle hard problems in uncharted territory.
 
 ---
 
 ## Education
 ### University of Virginia, Charlottesville, Virginia, USA
-**Ph.D. in Computer Science** (Full-time)  
-*Aug, 2025 - Now*  
-- Coursework: Serverless, Datacenter Network Infrastructure
+**Ph.D. in Computer Science** (Full-time)
+*Aug, 2025 - Now*
+- Coursework: Serverless AI, Datacenter Network Infrastructure
 
-### North Carolina State University, Raleigh, NC, USA  
-**Ph.D. in Computer Science (Non-degree)** (Full-time)  
-*Aug, 2023 - Nov, 2024*  
+### North Carolina State University, Raleigh, NC, USA
+**Ph.D. in Computer Science (Non-degree)** (Full-time)
+*Aug, 2023 - Nov, 2024*
 - Coursework: Cloud Computing, Software Testing, Automated Software Engineering
 
-**M.S. in Statistics (Exchange Student)** (Full-time)  
-*Aug, 2022 - Dec, 2022*  
-- Coursework: Fundamentals of Inference I, Advanced NextG Network Design, Cloud Computing  
+**M.S. in Statistics (Exchange Student)** (Full-time)
+*Aug, 2022 - Dec, 2022*
+- Coursework: Fundamentals of Inference I, Advanced NextG Network Design, Cloud Computing
 
-### Royal Melbourne Institute of Technology (RMIT), Melbourne, VIC, Australia  
-**M.S. in Statistics and Operations Research** (Full-time)  
-*Mar, 2021 - Dec, 2022*  
-- Coursework:  
-  - Optimization for Decision Making (linear optimization)  
-  - Multivariate Analysis  
-  - Data Visualization  
-  - Data Cleaning (Data Wrangling)  
-  - Time Series Analysis  
-  - Machine Learning  
-  - Applied Analytics  
-  - Statistical Computing  
+### Royal Melbourne Institute of Technology (RMIT), Melbourne, VIC, Australia
+**M.S. in Statistics and Operations Research** (Full-time)
+*Mar, 2021 - Dec, 2022*
+- Coursework:
+  - Optimization for Decision Making (linear optimization)
+  - Multivariate Analysis
+  - Data Visualization
+  - Data Cleaning (Data Wrangling)
+  - Time Series Analysis
+  - Machine Learning
+  - Applied Analytics
+  - Statistical Computing
 
-### University of Illinois Urbana-Champaign, Champaign County, Illinois, USA  
-**NetMath (Non-degree Courses)** (Part-time)  
-*Mar, 2018 - Jan, 2020*  
-- Coursework: Algebra, Preparation for Calculus  
+### University of Illinois Urbana-Champaign, Champaign County, Illinois, USA
+**NetMath (Non-degree Courses)** (Part-time)
+*Mar, 2018 - Jan, 2020*
+- Coursework: Algebra, Preparation for Calculus
 
-### University of Wollongong, Wollongong, NSW, Australia  
-**B.S. in Computer Science (Software Engineering)** (Full-time)  
-*Mar, 2014 - Dec, 2017*  
-- Coursework:  
-  - Object-Oriented Programming in C++  
-  - Algorithms and Data Structures  
-  - Database Systems  
-  - Systems Development  
-  - Software Development Methods & Tools  
+### University of Wollongong, Wollongong, NSW, Australia
+**B.S. in Computer Science (Software Engineering)** (Full-time)
+*Mar, 2014 - Dec, 2017*
+- Coursework:
+  - Object-Oriented Programming in C++
+  - Algorithms and Data Structures
+  - Database Systems
+  - Systems Development
+  - Software Development Methods & Tools
 
 ---
 
 ## Honors & Awards
-- **2022**: Graduate with Distinction, RMIT University, Australia  
-- **2022**: SAS Advanced Analytics Certificate, SAS, Australia  
-- **2020**: Microsoft Hackathon Prize, Microsoft, China  
-- **2018**: Best Undergraduate Final Project Prize, University of Wollongong, Australia  
-- **2017**: Amateur Radio Operator’s Certificate of Proficiency (Standard), The Wireless Institute of Australia (WIA), Australia  
-- **2014, 2015**: Undergraduate Excellence Scholarship, University of Wollongong, Australia  
+- **2022**: Graduate with Distinction, RMIT University, Australia
+- **2022**: SAS Advanced Analytics Certificate, SAS, Australia
+- **2020**: Microsoft Hackathon Prize, Microsoft, China
+- **2018**: Best Undergraduate Final Project Prize, University of Wollongong, Australia
+- **2017**: Amateur Radio Operator’s Certificate of Proficiency (Standard), The Wireless Institute of Australia (WIA), Australia
+- **2014, 2015**: Undergraduate Excellence Scholarship, University of Wollongong, Australia
 
 ---
 
 ## Employment
 ### **NC State University** | Raleigh, NC, USA 
 **Teaching Assistant - Software Architectures for the Cloud (CSC495)(PART-TIME)** | Aug, 2024 – Nov, 2024
-- Guided 21 undergraduate students and 2 master's students to independently complete projects on their chosen topics.  
-- Projects were divided into four parts: system design, implementation, security improvements, and deployment plans.  
-- Provided detailed feedback and assigned grades for each component of the projects.  
-- Achieved a high success rate, with 80% of students earning an A grade.  
+- Guided 21 undergraduate students and 2 master's students to independently complete projects on their chosen topics.
+- Projects were divided into four parts: system design, implementation, security improvements, and deployment plans.
+- Provided detailed feedback and assigned grades for each component of the projects.
+- Achieved a high success rate, with 80% of students earning an A grade.
 
 **Research Assistant - Data Science (Part-time)** | Aug, 2023 - Aug, 2024
 - Developed statistical models and sampling techniques to improve data efficiency in resource-constrained environments.
@@ -113,7 +114,7 @@ I hold a Master’s degree in Statistics and Operations Research from RMIT Unive
 - Led troubleshooting and performance optimization efforts for cloud networking and large-scale distributed systems.
 - Designed deployment strategies for cloud-native applications, ensuring robust, scalable architectures.
 - Provided in-depth technical support for enterprise networking, including transport protocols, hybrid cloud integration, and containerized workloads.
-- **Manager:** Kenji Hamada (Data & AI Pod)  
+- **Manager:** Kenji Hamada (Data & AI Pod)
 
 ### **Peng Cheng Laboratory** | Shenzhen, China
 **Algorithm Engineer - Computer Networks (Full-time)** | Dec, 2018 - Mar, 2020
@@ -168,6 +169,13 @@ I hold a Master’s degree in Statistics and Operations Research from RMIT Unive
 ---
 
 ## Publications
+
+### Fault-Tolerant Sandboxing for AI Coding Agents: A Transactional Approach to Safe Autonomous Execution
+**arXiv preprint, 2025**
+- Proposed a “middle-ground” sandboxing design for headless autonomous agents by treating each tool-call as an atomic transaction with explicit prepare/commit/rollback semantics.
+- Implemented a policy-based interception layer plus filesystem snapshot/rollback to block unsafe commands and recover from failed tool executions (state consistency guarantees).
+- Deployed and evaluated on my [data center testbed](posts/2025-04-10-010004-data_center_testbed_design) with EVPN/VXLAN isolation (VyOS VTEPs), separating the agent (LXC) from the inference server (GPU VM).
+- Demonstrated 100`%` interception and 100`%` rollback success, with only ~14.5`%` (~1.8s) per-transaction overhead using Minimind-v1-MoE served via nano-vllm.
 
 ### Workload Prediction in P4 Programmable Switches
 **arXiv preprint, 2024**
