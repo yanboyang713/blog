@@ -1,5 +1,5 @@
 ---
-title: "Data Center Testbed Design"
+title: "Data Center Testbed"
 draft: false
 ---
 
@@ -28,17 +28,25 @@ This Proxmox VE–based, multi-node testbed supports research and prototyping ac
 -   PVE web UI access from management Gateway: <https://pve.yanboyang.com:8006/>
 
 
+#### [Proxmox LXC]({{< relref "2023-12-03-143617-proxmox_lxc.md" >}}) (recommend) {#proxmox-lxc--2023-12-03-143617-proxmox-lxc-dot-md----recommend}
+
+Also, support [Open Container Initiative (OCI)]({{< relref "2023-12-03-143617-proxmox_lxc.md#open-container-initiative--oci" >}}), such as [docker]({{< relref "20230216042646-docker.md" >}}).
+
+
 #### [Virtual Machine (VM)]({{< relref "2025-12-12-081925-cloud_init.md" >}}) {#virtual-machine--vm----2025-12-12-081925-cloud-init-dot-md}
 
--   From [Proxmox VE (PVE)]({{< relref "20230228043925-proxmox_ve.md" >}}) Web
--   Use [SPICE (Simple Protocol for Independent Computing Environments)]({{< relref "2025-05-04-035528-spice.md#download-a-fresh-id-0407235a-6de7-47de-93a8-074cff1b35ae-spice--simple-protocol-for-independent-computing-environments--dot-vv-file-and-connect" >}})
+-   From [Proxmox VE (PVE)]({{< relref "20230228043925-proxmox_ve.md" >}}) Web, recommendation for the CLI, such as [Proxmox Linux Containers (LXC)]({{< relref "2023-12-03-143617-proxmox_lxc.md" >}}).
+-   Use [SPICE (Simple Protocol for Independent Computing Environments)]({{< relref "2025-05-04-035528-spice.md#download-a-fresh-id-0407235a-6de7-47de-93a8-074cff1b35ae-spice--simple-protocol-for-independent-computing-environments--dot-vv-file-and-connect" >}}) for the graphical interface.
 
 
 ## Physical Topology and Components {#physical-topology-and-components}
 
-{{< figure src="https://res.cloudinary.com/dkvj6mo4c/image/upload/v1764729697/testbed_2_wlunjv.png" >}}
 
-Topology overview: a dedicated management network for iDRAC access and PVE web UI access; a Proxmox VE LAN with dual VyOS WWAN gateways and one Wired gateway to CS network; EVPN overlays for tenant/lab networks; and a Kubernetes/OKD cluster for Aether 5G.
+### Topology overview {#topology-overview}
+
+A dedicated management network for iDRAC access and PVE web UI access; a Proxmox VE LAN with dual [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) WWAN gateways and one Wired [VyOS]({{< relref "2025-04-10-012017-vyos.md" >}}) gateway to CS network; [EVPN]({{< relref "2025-09-28-131926-setting_up_evpn_on_proxmox_sdn.md" >}}) overlays for tenant/lab networks; and a [Kubernetes]({{< relref "20230105185343-kubernetes.md" >}})/[OKD]({{< relref "20230518171737-okd.md" >}}) cluster for [Aether 5G]({{< relref "2024-05-18-220246-aether.md" >}}).
+
+{{< figure src="https://res.cloudinary.com/dkvj6mo4c/image/upload/v1764729697/testbed_2_wlunjv.png" >}}
 
 
 ### Management Network {#management-network}
@@ -185,7 +193,7 @@ DNS based on [BIND 9]({{< relref "2024-05-25-015638-bind_9.md" >}}).
 
 ### [DHCP]({{< relref "20230531193526-dhcp.md" >}}) {#dhcp--20230531193526-dhcp-dot-md}
 
-[NetBox]({{< relref "2025-11-30-174834-netbox.md" >}}) IP: 192.168.1.24/24
+[NetBox]({{< relref "2025-11-30-174834-netbox.md" >}}) IP: 192.168.1.26/24
 [Kea DHCP]({{< relref "2025-12-11-210940-kea_dhcp.md" >}}) IP: 192.168.1.25/24
 
 
