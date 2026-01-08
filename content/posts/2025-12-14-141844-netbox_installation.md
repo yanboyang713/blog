@@ -25,6 +25,7 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/Proxmo
 ### Access {#access}
 
 <https://192.168.1.26>
+**NOTE**: Apache2 handling **:80** and **:443**
 
 
 ### Location of config file {#location-of-config-file}
@@ -38,7 +39,87 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/Proxmo
 cat netbox.creds
 ```
 
-<https://community-scripts.github.io/ProxmoxVE/scripts?id=netbox>
+
+### [NetBox]({{< relref "2025-11-30-174834-netbox.md" >}}) Re-issue a self-signed cert that works for IP and/or hostname {#netbox--2025-11-30-174834-netbox-dot-md--re-issue-a-self-signed-cert-that-works-for-ip-and-or-hostname}
+
+
+#### Original CA {#original-ca}
+
+-   Cert: /etc/ssl/certs/netbox.crt
+-   Key: /etc/ssl/private/netbox.key (don’t copy this off the NetBox LXC)
+
+
+#### Confirm whether it’s self-signed {#confirm-whether-it-s-self-signed}
+
+```console
+root@netbox:~# openssl x509 -in /etc/ssl/certs/netbox.crt -noout -subject -issuer
+subject=C=US, O=NetBox, OU=Certificate, CN=localhost
+issuer=C=US, O=NetBox, OU=Certificate, CN=localhost
+```
+
+If subject == issuer, treat /etc/ssl/certs/netbox.crt as the CA.
+As you can found CN=localhost
+
+
+#### Back up Original CA {#back-up-original-ca}
+
+```bash
+cp -a /etc/ssl/certs/netbox.crt /etc/ssl/certs/netbox.crt.bak.$(date +%F)
+cp -a /etc/ssl/private/netbox.key /etc/ssl/private/netbox.key.bak.$(date +%F)
+```
+
+
+#### Generate New CA {#generate-new-ca}
+
+```bash
+openssl req -x509 -nodes -days 825 -newkey rsa:2048 \
+      -keyout /etc/ssl/private/netbox.key \
+      -out /etc/ssl/certs/netbox.crt \
+      -subj "/C=US/O=NetBox/OU=Certificate/CN=netbox.testbed.com" \
+      -addext "subjectAltName=DNS:netbox.testbed.com,IP:192.168.1.26"
+```
+
+**NOTE**:
+
+-   CN=netbox.testbed.com is there because the certificate needs an identity. Historically TLS used the Common Name, but modern clients
+-   validate the SAN (Subject Alternative Name). In our command, the SAN is the part that really matters:
+    -   subjectAltName=DNS:netbox.example.com,IP:192.168.1.26
+-   Pick the CN to match the primary name you plan to use (usually the hostname), but as long as SAN is correct, CN is mostly cosmetic.
+
+
+#### Set Apache vhost as ServerName netbox.testbed.com {#set-apache-vhost-as-servername-netbox-dot-testbed-dot-com}
+
+<!--list-separator-->
+
+-  Edit the vhost (set the name in both \*:80 and \*:443 blocks)
+
+    vi /etc/apache2/sites-available/netbox.conf
+
+    ```file
+    Make sure it includes:
+      ServerName netbox.example.com
+    ```
+
+<!--list-separator-->
+
+-  Reload Apache (after checking config)
+
+    ```bash
+    apachectl configtest
+    systemctl reload apache2
+    ```
+
+<!--list-separator-->
+
+-  Verify which vhost is active
+
+    ```bash
+    apachectl -S
+    ```
+
+    **Important**: for clients to reach <https://netbox.example.com>, that name must resolve to 192.168.1.26 (via PowerDNS or a client /etc/hosts entry).
+
+    <https://community-scripts.github.io/ProxmoxVE/scripts?id=netbox>
 
 
 ## Setting Up NetBox (Ubuntu 24.04/22.04) {#setting-up-netbox--ubuntu-24-dot-04-22-dot-04}

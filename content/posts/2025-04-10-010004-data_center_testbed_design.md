@@ -191,9 +191,20 @@ DNS based on [BIND 9]({{< relref "2024-05-25-015638-bind_9.md" >}}).
 192.168.1.23/24
 
 
+### [NetBox]({{< relref "2025-11-30-174834-netbox.md" >}}) {#netbox--2025-11-30-174834-netbox-dot-md}
+
+-   IP: 192.168.1.26/24
+
+
+#### [Proxmox NetBox Sync]({{< relref "2025-12-14-145144-proxmox_netbox_sync.md" >}}) {#proxmox-netbox-sync--2025-12-14-145144-proxmox-netbox-sync-dot-md}
+
+-   IP: 192.168.1.27/24
+-   Hostname: pve-netbox-sync
+-   Gateway: 192.168.1.4
+
+
 ### [DHCP]({{< relref "20230531193526-dhcp.md" >}}) {#dhcp--20230531193526-dhcp-dot-md}
 
-[NetBox]({{< relref "2025-11-30-174834-netbox.md" >}}) IP: 192.168.1.26/24
 [Kea DHCP]({{< relref "2025-12-11-210940-kea_dhcp.md" >}}) IP: 192.168.1.25/24
 
 

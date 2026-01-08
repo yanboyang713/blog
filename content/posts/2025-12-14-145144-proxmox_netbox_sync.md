@@ -22,14 +22,6 @@ Proxmox VE API and reconciles it into NetBox (create/update/delete as needed).
 -   Auth: NetBox API token + Proxmox API token (read-only perms like `VM.Monitor`, `VM.Audit`, `Sys.Audit` are typically sufficient).
 -   NetBox prep: create the cluster and physical hosts, and add the custom fields expected by the sync (ex: `autostart`, `ha`, `backup`).
 
-<!--listend-->
-
-```sh
-PVE_API_HOST=xx PVE_API_USER=xx PVE_API_TOKEN=xx PVE_API_SECRET=xx \
-NB_API_URL=xx NB_API_TOKEN=xx NB_CLUSTER_ID=xx \
-nbpxsync
-```
-
 
 ### Prepare NetBox {#prepare-netbox}
 
@@ -73,18 +65,7 @@ nbpxsync
 -   Devices → Device Roles → Add → Name: Hypervisor, Color: any → Create
 
 
-#### Create the Proxmox nodes as Devices (must match names) {#create-the-proxmox-nodes-as-devices--must-match-names}
-
--   Devices → Devices → Add
-    -   Name: server1 (repeat for server2…server5)
-    -   Site: your test Site
-    -   Device Role: Hypervisor
-    -   Device Type: Proxmox Node
-    -   Status: Active
--   Important: the device name must match Proxmox node name (server1, etc.) or the sync exits.
-
-
-#### Create the Cluster that will hold the VMs {#create-the-cluster-that-will-hold-the-vms}
+#### Create the [NetBox]({{< relref "2025-11-30-174834-netbox.md" >}}) Cluster that will hold the VMs {#create-the-netbox--2025-11-30-174834-netbox-dot-md--cluster-that-will-hold-the-vms}
 
 -   Virtualization → Cluster Types → Add → Name: Proxmox → Create
 -   (Optional) Virtualization → Cluster Groups → Add → Name: Lab → Create
@@ -98,6 +79,21 @@ nbpxsync
     -   <https://<netbox>/virtualization/clusters/123/>
 
     In that case, **NB_CLUSTER_ID=123**. My one is 1.
+
+
+#### Create the Proxmox nodes as Devices (must match names) {#create-the-proxmox-nodes-as-devices--must-match-names}
+
+first: Go to Devices → Devices → Configure Table → Add **Cluster** column
+Then:
+
+-   Devices → Devices → Add
+    -   Name: server1 (repeat for server2…server5)
+    -   Site: your test Site
+    -   Device Role: Hypervisor
+    -   Device Type: Proxmox Node
+    -   Status: Active
+    -   Cluster: [Boyang](#create-the-netbox--2025-11-30-174834-netbox-dot-md--cluster-that-will-hold-the-vms)
+-   Important: the device name must match Proxmox node name (server1, etc.) or the sync exits.
 
 
 #### Add the Custom Fields the tool requires {#add-the-custom-fields-the-tool-requires}
@@ -114,7 +110,7 @@ nbpxsync
 -   IPs come from QEMU Guest Agent (network-get-interfaces). If your VMs don’t have it installed/enabled, VMs will still sync, but IPs/prefixes likely won’t.
 
 
-#### Create API Token {#create-api-token}
+#### Create [NetBox]({{< relref "2025-11-30-174834-netbox.md" >}}) API Token {#create-netbox--2025-11-30-174834-netbox-dot-md--api-token}
 
 Create **NB_API_TOKEN** (NetBox 4.4.9)
 
@@ -142,7 +138,7 @@ Your **NB_API_URL**
 ### Prepare Proxmox (API access with least privilege) {#prepare-proxmox--api-access-with-least-privilege}
 
 
-#### Create a dedicated user {#create-a-dedicated-user}
+#### Create a dedicated user for [Proxmox VE (PVE)]({{< relref "20230228043925-proxmox_ve.md" >}}) and [NetBox]({{< relref "2025-11-30-174834-netbox.md" >}}) sync {#create-a-dedicated-user-for-proxmox-ve--pve----20230228043925-proxmox-ve-dot-md--and-netbox--2025-11-30-174834-netbox-dot-md--sync}
 
 -   Proxmox UI → Datacenter → Permissions → Users → Add
 -   Fill:
@@ -162,7 +158,7 @@ Your **NB_API_URL**
 -   Add
 
 
-#### Create API Tokens {#create-api-tokens}
+#### Create API Tokens for [Proxmox VE (PVE)]({{< relref "20230228043925-proxmox_ve.md" >}}) and [NetBox]({{< relref "2025-11-30-174834-netbox.md" >}}) sync {#create-api-tokens-for-proxmox-ve--pve----20230228043925-proxmox-ve-dot-md--and-netbox--2025-11-30-174834-netbox-dot-md--sync}
 
 -   Datacenter → Permissions → API Tokens → Add
 -   User: netsync@pve
@@ -230,67 +226,117 @@ Your **NB_API_URL**
 ### Create a [Proxmox Linux Containers (LXC)]({{< relref "2023-12-03-143617-proxmox_lxc.md" >}}) for netbox-pve-sync {#create-a-proxmox-linux-containers--lxc----2023-12-03-143617-proxmox-lxc-dot-md--for-netbox-pve-sync}
 
 
-#### Configure {#configure}
+#### Create an LXC **runner** (Proxmox UI) {#create-an-lxc-runner--proxmox-ui}
 
-1.  Create an LXC “runner” (Proxmox UI)
+-   [PVE Container Images Download]({{< relref "2023-12-03-143617-proxmox_lxc.md#pve-container-images-download" >}}) → download debian-12-standard_\*
+-   Click [create a CT Container]({{< relref "2023-12-03-143617-proxmox_lxc.md#steps-for-create-a-new-lxc-container" >}})
+    -   General: Hostname pve-netbox-sync
+    -   Template: pick the Debian 12 template
+    -   Disks: 8–16 GB
+    -   CPU/Memory: 1–2 cores, 512 MB–1 GB RAM
+    -   Network: bridge vmbr0, static IP
+        -   IP: 192.168.1.27/24
+        -   Hostname: pve-netbox-sync
+        -   Gateway: 192.168.1.4
+    -   Unprivileged: enabled (recommended)
+    -   Start after created: enabled
 
-    -   Proxmox UI → select a node (e.g. server1) → local (storage) → CT Templates → Templates → download debian-12-standard_\*
-    -   Click Create CT
-        -   General: CT ID e.g. 200, Hostname netbox-sync
-        -   Template: pick the Debian 12 template
-        -   Disks: 8–16 GB
-        -   CPU/Memory: 1–2 cores, 512 MB–1 GB RAM
-        -   Network: bridge vmbr0, DHCP or static IP, set DNS/gateway
-        -   Unprivileged: enabled (recommended)
-        -   Start after created: enabled
 
-    -   Inside the LXC: install netbox-pve-sync
+#### Inside the LXC: install netbox-pve-sync {#inside-the-lxc-install-netbox-pve-sync}
 
-    apt update
-    apt install -y python3 python3-venv python3-pip ca-certificates
-    python3 -m venv _opt/netbox-pve-sync_.venv
-    _opt/netbox-pve-sync_.venv/bin/pip install --upgrade pip
-    _opt/netbox-pve-sync_.venv/bin/pip install netbox-pve-sync
-    _opt/netbox-pve-sync_.venv/bin/nbpxsync --help
+```bash
+apt update
+apt upgrade
 
-    1.  Configure environment variables (use an env file)
+apt install -y python3 python3-venv python3-pip ca-certificates git
 
-    Create /etc/netbox-pve-sync.env in the LXC:
+git clone https://github.com/yanboyang713/netbox-pve-sync.git /opt/netbox-pve-sync
+python3 -m venv /opt/netbox-pve-sync/.venv
+/opt/netbox-pve-sync/.venv/bin/pip install --upgrade pip
+/opt/netbox-pve-sync/.venv/bin/pip install -e /opt/netbox-pve-sync
+```
 
-    NB_API_URL=<https://192.168.1.26>
-    NB_API_TOKEN=...             # NetBox API token
-    NB_CLUSTER_ID=...            # numeric ID from cluster URL
 
-    PVE_API_HOST=192.168.1.11
-    PVE_API_USER=netsync@pve
-    PVE_API_TOKEN=netbox-sync
-    PVE_API_SECRET=...           # Proxmox API token secret
-    PVE_API_VERIFY_SSL=false
+#### Configure environment variables (use an env file) {#configure-environment-variables--use-an-env-file}
 
-    Important: rotate/recreate your Proxmox API token now (you pasted the secret earlier).
+-   [Get NetBox API Token](#create-netbox--2025-11-30-174834-netbox-dot-md--api-token)
+-   [Get Cluster ID when created the NetBox Cluster](#create-the-netbox--2025-11-30-174834-netbox-dot-md--cluster-that-will-hold-the-vms)
+-   [Get a dedicated user for Proxmox VE (PVE) and NetBox sync](#create-a-dedicated-user-for-proxmox-ve--pve----20230228043925-proxmox-ve-dot-md--and-netbox--2025-11-30-174834-netbox-dot-md--sync)
+-   [Get API Tokens for Proxmox VE (PVE) and NetBox sync](#create-api-tokens-for-proxmox-ve--pve----20230228043925-proxmox-ve-dot-md--and-netbox--2025-11-30-174834-netbox-dot-md--sync)
 
-    1.  Fix NetBox HTTPS (self-signed cert)
+Create /etc/netbox-pve-sync.env in the LXC:
 
-    Recommended: trust your NetBox cert in the LXC (so Python requests works without disabling TLS):
+```file
+NB_API_URL=https://netbox.testbed.com
+NB_API_TOKEN=...             # NetBox API token
+NB_CLUSTER_ID=...            # numeric ID from cluster URL
 
-    -   Copy your NetBox cert/CA to the LXC as /usr/local/share/ca-certificates/netbox.crt
-    -   Then run:
+PVE_API_HOST=192.168.1.11
+PVE_API_USER=netsync@pve
+PVE_API_TOKEN=netbox-sync
+PVE_API_SECRET=...           # Proxmox API token secret
 
-    update-ca-certificates
+REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+```
 
-    (Alternative quick workaround: set REQUESTS_CA_BUNDLE=/path/to/netbox-ca.pem in the env file, but system CA is cleaner.)
 
-    1.  Run a manual test
+#### Fix NetBox HTTPS (self-signed cert) {#fix-netbox-https--self-signed-cert}
 
-    set -a
-    . _etc/netbox-pve-sync.env
-    set +a
-    /opt/netbox-pve-sync_.venv/bin/nbpxsync
+-   Pre-require: [NetBox Re-issue a self-signed cert that works for IP and/or hostname]({{< relref "2025-12-14-141844-netbox_installation.md#id-3fb5adf6-b8c8-43cd-9726-c1d126458e4e-netbox-re-issue-a-self-signed-cert-that-works-for-ip-and-or-hostname" >}})
 
-    If it fails, the two most common blockers are:
+Recommended: trust your NetBox cert in the LXC (so Python requests works without disabling TLS):
 
-    -   Proxmox token can’t list VMs: curl -k -sS -H 'Authorization: PVEAPIToken=netsync@pve!netbox-sync=SECRET' 'https://192.168.1.11:8006/api2/json/cluster/resources?type=vm' must return data.
-    -   NetBox prerequisites missing: cluster exists, Proxmox nodes exist as Devices with matching names, and required custom fields exist.
+-   Copy your NetBox cert/CA to the LXC as /usr/local/share/ca-certificates/netbox.crt
+    ```bash
+      mkdir -p /usr/local/share/ca-certificates
+      # single command
+      openssl s_client -connect 192.168.1.26:443 -servername netbox.testbed.com -showcerts </dev/null 2>/dev/null \
+    | awk 'n==0 && /BEGIN CERTIFICATE/{n=1} n{print} /END CERTIFICATE/{exit}' \
+    > /usr/local/share/ca-certificates/netbox.crt
+    ```
+-   Quick sanity check
+    ```bash
+    root@pve-netbox-sync:~# openssl x509 -in /usr/local/share/ca-certificates/netbox.crt -noout -subject -issuer
+    subject=C = US, O = NetBox, OU = Certificate, CN = netbox.testbed.com
+    issuer=C = US, O = NetBox, OU = Certificate, CN = netbox.testbed.com
+    ```
+-   Then run:
+
+<!--listend-->
+
+```bash
+update-ca-certificates
+```
+
+Alternative quick workaround: set **REQUESTS_CA_BUNDLE=/path/to/netbox-ca.pem** in the env file, but system CA is cleaner.
+
+-   Edit /etc/hosts
+    ```file
+    192.168.1.26 netbox.testbed.com
+    ```
+-   Verify
+
+<!--listend-->
+
+```bash
+getent hosts netbox.testbed.com
+```
+
+
+#### Run a manual test {#run-a-manual-test}
+
+```bash
+set -a; . /etc/netbox-pve-sync.env; set +a
+/opt/netbox-pve-sync/.venv/bin/nbpxsync
+
+/opt/netbox-pve-sync/.venv/bin/nbpxsync --help
+```
+
+If it fails, the two most common blockers are:
+
+-   Proxmox token can’t list VMs: curl -k -sS -H 'Authorization: PVEAPIToken=netsync@pve!netbox-sync=SECRET' 'https://192.168.1.11:8006/api2/json/cluster/resources?type=vm' must return data.
+-   NetBox prerequisites missing: cluster exists, Proxmox nodes exist as Devices with matching names, and required custom fields exist.
 
 
 ## Reference List {#reference-list}
