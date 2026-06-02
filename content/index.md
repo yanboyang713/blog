@@ -37,7 +37,7 @@ I’m passionate about exploring new technologies and methodologies and eager to
 ### University of Virginia, Charlottesville, Virginia, USA
 **Ph.D. in Computer Science** (Full-time)
 *Aug, 2025 - Now*
-- Coursework: Serverless AI, Datacenter Network Infrastructure
+- Coursework: AI Agent, Network Security, Serverless AI, Datacenter Network Infrastructure
 
 ### North Carolina State University, Raleigh, NC, USA
 **Ph.D. in Computer Science (Non-degree)** (Full-time)
