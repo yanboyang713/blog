@@ -5,18 +5,9 @@ tags: ["observability", "kv-cache", "langgraph", "sglang", "mlflow"]
 draft: false
 ---
 
-[Observability in LLM Inference Serving Engines: Comparing Metrics, Logging, Tracing, and Profiling]({{< relref "2026-06-23-224027-observability_in_llm_inference_serving_engines_comparing_metrics_logging_tracing_and_profiling.md" >}})
-
-[Observability for AI Agent Frameworks: Comparing MLflow, LangSmith, Phoenix, Langfuse, Braintrust, W&amp;B Weave, and OpenTelemetry]({{< relref "2026-06-24-132210-observability_for_ai_agent_frameworks_comparing_mlflow_langsmith_phoenix_langfuse_braintrust_w_b_weave_and_opentelemetry.md" >}})
-
-[KV-cache]({{< relref "2026-06-23-204356-kv_cache.md" >}})
-[vLLM]({{< relref "2025-04-22-085318-vllm.md" >}})
-[KVFlow: Efficient Prefix Caching for Accelerating LLM-Based Multi-Agent Workflows]({{< relref "2026-06-19-175540-kvflow.md" >}})
-
-
 ## Objective {#objective}
 
-Multi-agent LLM applications contain more structure than ordinary independent inference requests. A planner may be invoked repeatedly, an executor may consume changing tool outputs, and a verifier may share substantial context with earlier agents. These differences affect prompt length, prefix reuse, prefill computation, KV-cache occupancy, and workflow latency.
+Multi-agent LLM applications contain more structure than ordinary independent inference requests. This project use exactly same [KVFlow]({{< relref "2026-06-19-175540-kvflow.md" >}}) workflow, which uses a PEER-style four-agent cycle: Planner, Executor, Expresser, and Reviewer. These agents can have different fixed prompts, different dynamic state, and different reuse distance across workflow steps. Those differences affect prompt length, prefix reuse, prefill computation, KV-cache occupancy, and workflow latency.
 
 A global cache-hit rate cannot explain these behaviors. It cannot tell us:
 
@@ -25,13 +16,40 @@ A global cache-hit rate cannot explain these behaviors. It cannot tell us:
 -   whether one workflow evicted another workflow's useful prefixes;
 -   whether the critical-path latency is dominated by queueing, prefill, decode, tools, or cache misses.
 
-The project is to build an agent-specific KV-cache profiler using:
+The project is to build an agent-specific [KV-cache]({{< relref "2026-06-23-204356-kv_cache.md" >}}) profiler using:
 
 -   [LangGraph]({{< relref "2025-04-20-031839-langgraph.md" >}}) to define and identify agents, workflow state, turns, branches, loops, and transitions;
 -   [SGLang]({{< relref "2026-06-17-143142-sglang.md" >}}) to serve the model and expose request, prefix-cache, queue, and timing telemetry;
 -   [MLflow]({{< relref "2023-11-30-224657-mlflow.md" >}}) to collect traces, attach custom measurements, organize experiments, and compare configurations.
 
 The initial objective is characterization rather than cache-policy optimization. Before designing a new eviction, compression, prefetch, or routing policy, the profiler should explain how real multi-agent workflows use the KV cache.
+
+
+## KVFlow workflow {#kvflow-workflow}
+
+This note uses the same multi-agent workflow abstraction as KVFlow. The workflow is the PEER cycle:
+
+```text
+Planner -> Executor -> Expresser -> Reviewer -> Planner
+```
+
+The agents play the following roles:
+
+Planner
+: decomposes the user problem, decides the next step, and prepares instructions for execution.
+
+Executor
+: performs the planned work, such as retrieval, tool use, calculation, or synthesis of intermediate evidence.
+
+Expresser
+: turns the intermediate result into a clear answer or report for the user-facing side of the workflow.
+
+Reviewer
+: reviews the expressed result, performs self-assessment, identifies missing or weak parts, and may send the workflow back to the Planner for another cycle.
+
+In KVFlow, these agents are important because each agent has a fixed prompt and appears at a known position in the workflow. The serving layer can use the current agent identity and future steps-to-execution to decide which KV-cache entries should be retained, evicted, or prefetched. This article therefore uses `reviewer`, not `verifier`, as the fourth agent.
+
+KVFlow's motivating example is cache behavior across this cycle: when the Executor is active, its KV cache may evict the Expresser's cache under a simple LRU policy; when the Expresser becomes active again, the cache miss increases prefill latency. The profiler should therefore measure cache reuse by PEER agent and by PEER transition, not only by global cache-hit rate.
 
 
 ## Why this stack {#why-this-stack}
@@ -49,7 +67,7 @@ LangGraph knows which logical component is executing. It can identify:
 -   branches and loops;
 -   tool calls and state transitions.
 
-This information does not naturally exist inside an inference server. SGLang sees tokenized requests, but it does not inherently know that one request belongs to a planner and another belongs to a verifier.
+This information does not naturally exist inside an inference server. SGLang sees tokenized requests, but it does not inherently know that one request belongs to the Planner, Executor, Expresser, or Reviewer.
 
 
 ### SGLang supplies cache and serving telemetry {#sglang-supplies-cache-and-serving-telemetry}
@@ -68,6 +86,7 @@ The relevant documented SGLang features are:
 -   `--enable-trace` and `--otlp-traces-endpoint` for OpenTelemetry request tracing.
 
 SGLang is also sufficiently extensible for later source-level cache-event and provenance instrumentation.
+Details compare with [LLM Inference Serving Engines in Observability]({{< relref "2026-06-23-224027-observability_in_llm_inference_serving_engines_comparing_metrics_logging_tracing_and_profiling.md" >}}).
 
 
 ### MLflow connects traces and experiments {#mlflow-connects-traces-and-experiments}
@@ -89,8 +108,8 @@ latency.e2e_ms
 ```
 
 MLflow can store the configuration of each experiment, including model revision, tokenizer revision, cache capacity, eviction policy, workflow topology, prompt layout, and concurrency level.
-
-MLflow is the trace and experiment-management layer. It is not the KV-cache profiler by itself. The cache measurements must come from SGLang, KVFlow, or custom backend instrumentation.
+MLflow is the trace and experiment-management layer. It is not the KV-cache profiler by itself. The cache measurements must come from SGLang, [KVFlow]({{< relref "2026-06-19-175540-kvflow.md" >}}), or custom backend instrumentation.
+Details compare with [AI Agent Frameworks in Observability]({{< relref "2026-06-24-132210-observability_for_ai_agent_frameworks_comparing_mlflow_langsmith_phoenix_langfuse_braintrust_w_b_weave_and_opentelemetry.md" >}}).
 
 
 ## Research questions {#research-questions}
@@ -116,14 +135,14 @@ For each agent, measure:
 Compare transitions such as:
 
 ```text
-Planner -> Planner
 Planner -> Executor
-Executor -> Verifier
-Verifier -> Planner
-Tool Agent -> Executor
+Executor -> Expresser
+Expresser -> Reviewer
+Reviewer -> Planner
+Planner -> Planner
 ```
 
-The unit of analysis is an ordered pair \\(A\_i \rightarrow A\_j\\), where \\(A\_i\\) is the previous agent and \\(A\_j\\) is the current agent.
+The unit of analysis is an ordered pair \\((A\_i \rightarrow A\_j)\\), where \\((A\_i)\\) is the previous agent and \\((A\_j)\\) is the current agent.
 
 
 ### RQ3: How does prompt organization affect cache reuse? {#rq3-how-does-prompt-organization-affect-cache-reuse}
@@ -180,26 +199,16 @@ Compare configurations where agents:
 
 The primary objective should not be only global cache-hit rate.
 
-\\[
-T<sub>\text{workflow}</sub>
-=
-&sum;_i
-\left(
-T<sub>\text{queue},i</sub>
+For the KVFlow PEER cycle, this means:
 
--
-
-T<sub>\text{prefill},i</sub>
-
--
-
-T<sub>\text{decode},i</sub>
-
--
-
-T<sub>\text{tool},i</sub>
-\right)
-\\]
+```text
+total workflow time
+= Planner time
++ Executor time
++ Expresser time
++ Reviewer time
++ any repeated cycle time
+```
 
 An agent may have a low cache-hit rate but contribute little to total latency. Another agent may be latency-critical even if it is invoked infrequently.
 
@@ -333,7 +342,8 @@ Identifies the logical role of the current node:
 ```text
 planner
 executor
-verifier
+expresser
+reviewer
 ```
 
 Agent names alone are not globally unique because concurrent workflows may each contain an agent named `planner`.
@@ -399,7 +409,7 @@ model                  = Qwen/Qwen2.5-3B-Instruct
 serving_engine         = sglang
 prefix_cache           = enabled
 radix_eviction_policy  = lru
-workflow               = planner-executor-verifier
+workflow               = planner-executor-expresser-reviewer
 concurrency            = 8
 fixed_prompt_tokens    = 1024
 cache_capacity         = default
@@ -429,7 +439,9 @@ workflow
   -> executor
      -> tool_call
      -> sglang_inference
-  -> verifier
+  -> expresser
+     -> sglang_inference
+  -> reviewer
      -> sglang_inference
 ```
 
@@ -458,54 +470,135 @@ Store the final table as Parquet and log it as an MLflow artifact. JSONL is usef
 
 ### Newly computed prompt tokens {#newly-computed-prompt-tokens}
 
-\\[
-N\_{\text{new-prefill}}
-=
-\max(N\_{\text{prompt}} - N\_{\text{cached}}, 0)
-\\]
+```text
+new_prefill_tokens = max(prompt_tokens - cached_tokens, 0)
+```
 
 
 ### Reported request cache-hit ratio {#reported-request-cache-hit-ratio}
 
-\\[
-H\_{\text{request}}
-=
-\frac{N\_{\text{cached}}}{N\_{\text{prompt}}}
-\\]
+```text
+reported_cache_hit_ratio = cached_tokens / prompt_tokens
+```
 
 Name this `reported_cache_hit_ratio` because SGLang's cache alignment and engine-specific accounting may affect the exact denominator. Initially, total prompt tokens can be used as the denominator. Later, the calculation should account for tokens that are not cache-eligible.
 
 
 ### Workflow-level weighted hit ratio {#workflow-level-weighted-hit-ratio}
 
-A simple average of request hit ratios can be misleading. A ten-token request and a ten-thousand-token request should not have equal weight.
+Workflow-level weighted hit ratio asks:
 
-\\[
-H\_{\text{workflow}}
-=
-\frac{\sum\_i N\_{\text{cached},i}}
-{\sum\_i N\_{\text{prompt},i}}
-\\]
+```text
+Across the whole workflow, what fraction of all prompt tokens came from the KV cache?
+```
+
+A simple average of request hit ratios can be misleading. A small request and a very large request should not have equal weight.
+
+```text
+workflow_cache_hit_ratio
+= sum(cached_tokens for all requests)
+  / sum(prompt_tokens for all requests)
+```
+
+For example:
+
+```text
+Request 1:
+prompt_tokens = 100
+cached_tokens = 90
+request_hit_ratio = 90%
+
+Request 2:
+prompt_tokens = 10000
+cached_tokens = 1000
+request_hit_ratio = 10%
+```
+
+The simple average is:
+
+```text
+(90% + 10%) / 2 = 50%
+```
+
+But this is misleading because Request 2 is much larger. The weighted workflow hit ratio is:
+
+```text
+(90 + 1000) / (100 + 10000)
+= 1090 / 10100
+= about 10.8%
+```
+
+For the KVFlow PEER cycle, calculate it across all agent calls in one workflow run:
+
+```text
+workflow_cache_hit_ratio
+= cached tokens from Planner, Executor, Expresser, and Reviewer
+  / prompt tokens from Planner, Executor, Expresser, and Reviewer
+```
+
+This gives the cache reuse of the whole workflow, not just one agent call.
 
 
 ### Recompute burden {#recompute-burden}
 
-\\[
-B\_{\text{recompute}}
-=
-\sum\_i N\_{\text{new-prefill},i}
-\\]
+Recompute burden asks:
 
-This may correlate more directly with workflow latency than average hit ratio.
+```text
+How many prompt tokens had to be recomputed instead of reused from the KV cache?
+```
+
+For one request:
+
+```text
+new_prefill_tokens = prompt_tokens - cached_tokens
+```
+
+For the whole workflow:
+
+```text
+recompute_burden = sum(new_prefill_tokens for all requests)
+```
+
+For example:
+
+```text
+Planner:
+prompt_tokens = 4000
+cached_tokens = 3000
+new_prefill_tokens = 1000
+
+Executor:
+prompt_tokens = 8000
+cached_tokens = 2000
+new_prefill_tokens = 6000
+
+Expresser:
+prompt_tokens = 5000
+cached_tokens = 4500
+new_prefill_tokens = 500
+
+Reviewer:
+prompt_tokens = 3000
+cached_tokens = 1000
+new_prefill_tokens = 2000
+```
+
+Then:
+
+```text
+recompute_burden
+= 1000 + 6000 + 500 + 2000
+= 9500 tokens
+```
+
+This may correlate more directly with workflow latency than average hit ratio. Cached tokens are relatively cheap to reuse, while new prefill tokens require GPU computation. A workflow can have a decent cache-hit ratio but still be slow if the uncached portion is large.
 
 
 ### Time to first token {#time-to-first-token}
 
-\\[
-TTFT
-=
-t\_{\text{first-token}} - t\_{\text{request-submitted}}
-\\]
+```text
+ttft_ms = first_token_time_ms - request_submitted_time_ms
+```
 
 Measure TTFT with streaming responses. Do not estimate TTFT by dividing total latency by token count.
 
@@ -514,33 +607,25 @@ Measure TTFT with streaming responses. Do not estimate TTFT by dividing total la
 
 For responses with more than one output token:
 
-\\[
-TPOT
-=
-\frac{
-t\_{\text{last-token}} - t\_{\text{first-token}}
-}{
-N\_{\text{output}} - 1
-}
-\\]
+```text
+tpot_ms
+= (last_token_time_ms - first_token_time_ms)
+  / (output_tokens - 1)
+```
 
 
 ### End-to-end latency {#end-to-end-latency}
 
-\\[
-T\_{\text{E2E}}
-=
-t\_{\text{response-complete}} - t\_{\text{request-submitted}}
-\\]
+```text
+e2e_latency_ms = response_complete_time_ms - request_submitted_time_ms
+```
 
 
 ### Cache pressure {#cache-pressure}
 
-\\[
-P\_{\text{cache}}
-=
-\frac{N\_{\text{used-cache-tokens}}}{N\_{\text{cache-capacity}}}
-\\]
+```text
+cache_pressure = used_cache_tokens / cache_capacity_tokens
+```
 
 Prefer SGLang's logical cache metrics over raw `nvidia-smi` memory. An inference server may reserve a large memory pool at startup even when relatively few logical cache entries are occupied.
 
@@ -571,7 +656,7 @@ Record:
 
 The exact chat template is especially important. Prefix caching operates on token identity, so a change in role markers, whitespace, or message serialization can change cache behavior.
 
-Suggested repository structure:
+Repository structure:
 
 ```text
 agent-kv-profiler/
@@ -641,7 +726,7 @@ Important design choices:
 -   `--enable-cache-report` supplies per-request cached-token counts in OpenAI-compatible usage records.
 -   `--enable-metrics` exposes Prometheus metrics.
 -   `--log-requests-level 0` keeps request logging at metadata level.
--   Do not log full prompts and outputs unless the workload is synthetic and non-sensitive.
+-   For this profiler, raw production prompts may be logged intentionally when prompt-level cache debugging requires the exact text.
 -   Do not enable every debugging and tracing option simultaneously, because instrumentation can change latency.
 
 Use separate modes:
@@ -664,15 +749,17 @@ The first workflow should be deliberately simple:
 START
   -> Planner
   -> Executor
-  -> Verifier
-  -> END
+  -> Expresser
+  -> Reviewer
+  -> Planner (next cycle)
 ```
+
+For a finite benchmark, stop after a fixed number of PEER cycles or after the Reviewer decides that no more revision is needed.
 
 The state should contain at least:
 
 ```python
 from typing import TypedDict
-
 
 class WorkflowState(TypedDict):
     thread_id: str
@@ -683,7 +770,8 @@ class WorkflowState(TypedDict):
     messages: list[dict[str, str]]
     plan: str | None
     execution_result: str | None
-    verification: str | None
+    expression: str | None
+    review: str | None
 ```
 
 The initial workflow should avoid external tools. Tool calls can be introduced after the inference-only profiling pipeline is validated.
@@ -697,7 +785,6 @@ Initialize MLflow before constructing or invoking the graph:
 
 ```python
 import mlflow
-
 
 mlflow.set_tracking_uri("http://localhost:5000")
 mlflow.set_experiment("agent-specific-kv-cache-profiling")
@@ -934,7 +1021,6 @@ The LangGraph state should carry profiling context:
 ```python
 from typing import TypedDict
 
-
 class AgentState(TypedDict):
     thread_id: str
     workflow_run_id: str
@@ -1028,820 +1114,100 @@ Under concurrency, before-and-after differences cannot be attributed exclusively
 
 ## Phase 7: Prompt instrumentation {#phase-7-prompt-instrumentation}
 
-Cache reuse depends on the final tokenized sequence, not only on apparent prompt text.
+Prompt instrumentation means recording metadata about the prompt before it is sent to the model. The goal is to explain why a request did or did not reuse KV cache.
+
+Cache reuse depends on the final tokenized sequence, not only on apparent prompt text. Two prompts can look similar to a human but produce different token prefixes because of role order, chat template changes, whitespace, separators, or message serialization.
 
 Record:
 
 ```text
 prompt_template_version
 chat_template_name
+raw_messages_json
+serialized_prompt_text
+raw_prompt_text
 prompt_text_hash
 token_id_hash
 fixed_prefix_tokens
 dynamic_suffix_tokens
+first_divergence_token_index
 ```
 
-Avoid storing raw production prompts unless necessary.
+For this profiler, store raw production prompts when the experiment requires exact prompt-level cache debugging. The raw prompt record should include both the application message structure and the final serialized prompt that reaches the tokenizer:
+
+```text
+raw_messages_json = original chat messages before serialization
+serialized_prompt_text = exact prompt text after applying the chat template
+raw_prompt_text = prompt text stored for inspection and replay
+```
+
+The hash fields should still be stored because they make grouping and joins easier:
+
+```text
+prompt_text_hash = hash(serialized_prompt_text)
+token_id_hash = hash(token_ids)
+```
 
 A useful prompt decomposition is:
 
-\\[
-P<sub>\text{agent}</sub>
-=
-P<sub>\text{shared}</sub>
+```text
+agent_prompt
+= shared_context
++ agent_role
++ fixed_examples
++ dynamic_state
++ current_input
+```
 
--
+Where:
 
-P<sub>\text{role}</sub>
+-   `shared_context` is shared by Planner, Executor, Expresser, and Reviewer.
+-   `agent_role` identifies the current KVFlow agent.
+-   `fixed_examples` remain constant across requests.
+-   `dynamic_state` changes as the workflow executes.
+-   `current_input` contains the current task, user message, or tool result.
 
--
-
-P<sub>\text{fixed-examples}</sub>
-
--
-
-P<sub>\text{dynamic-state}</sub>
-
--
-
-P<sub>\text{current-input}</sub>
-\\]
-
-where:
-
--   \\(P\_{\text{shared}}\\) is shared among agents;
--   \\(P\_{\text{role}}\\) identifies one agent;
--   \\(P\_{\text{fixed-examples}}\\) remains constant;
--   \\(P\_{\text{dynamic-state}}\\) changes with workflow execution;
--   \\(P\_{\text{current-input}}\\) contains the current task or message.
-
-The profiler should identify the token index where two agent prompts diverge. This gives an application-side prediction of the maximum possible prefix-cache hit.
-
-
-## Validation tests {#validation-tests}
-
-
-### Test 1: cold request {#test-1-cold-request}
-
-Restart SGLang and send one request.
-
-Expected result:
+The profiler should record the exact token sequence and a hash of it:
 
 ```text
-cached_tokens approximately 0
+token_ids = tokenize(agent_prompt)
+token_id_hash = hash(token_ids)
 ```
 
-Some template-level or startup behavior may produce small deviations, so inspect the exact tokenized prompt.
-
-
-### Test 2: exact repeated request {#test-2-exact-repeated-request}
-
-Send the identical request twice.
-
-Expected result:
+It should also identify where two agent prompts first diverge:
 
 ```text
-second.cached_tokens > first.cached_tokens
-second.new_prefill_tokens < first.new_prefill_tokens
-second.ttft_ms < first.ttft_ms
+first_divergence_token_index
+= first token position where prompt A and prompt B differ
 ```
 
-
-### Test 3: appended conversation {#test-3-appended-conversation}
-
-Send a second request whose prompt contains the first request as an exact prefix plus additional messages.
-
-Expected result:
+This gives an application-side estimate of the maximum possible prefix-cache reuse:
 
 ```text
-cached_tokens approximately equal to the reusable earlier prefix
+maximum_possible_reused_tokens = first_divergence_token_index
 ```
 
-
-### Test 4: one-token divergence {#test-4-one-token-divergence}
-
-Construct two prompts that differ near the beginning.
-
-Expected result:
+For example, this layout is cache-friendly because the shared context appears first:
 
 ```text
-cached prefix ends near the first token difference
+shared_context
+fixed_examples
+agent_role
+dynamic_state
+current_input
 ```
 
-
-### Test 5: identifier completeness {#test-5-identifier-completeness}
-
-Every model invocation must have:
+This layout is less cache-friendly across agents because the prompt diverges immediately at `agent_role`:
 
 ```text
-thread_id
-workflow_run_id
-agent_id
-turn_id
-request_uuid
-MLflow span
+agent_role
+shared_context
+fixed_examples
+dynamic_state
+current_input
 ```
 
-Target:
-
-```text
-100% request-to-span join rate
-```
-
-
-### Test 6: cache-report sanity {#test-6-cache-report-sanity}
-
-For every request:
-
-\\[
-0 \leq N\_{\text{cached}} \leq N\_{\text{prompt}}
-\\]
-
-and:
-
-\\[
-N\_{\text{new-prefill}}
-=
-N\_{\text{prompt}} - N\_{\text{cached}}
-\\]
-
-
-### Test 7: timing consistency {#test-7-timing-consistency}
-
-For every request:
-
-\\[
-TTFT \leq T\_{\text{E2E}}
-\\]
-
-and, for streaming:
-
-\\[
-t\_{\text{submit}}
-\leq
-t\_{\text{first-token}}
-\leq
-t\_{\text{last-token}}
-\leq
-t\_{\text{complete}}
-\\]
-
-
-### Test 8: instrumentation overhead {#test-8-instrumentation-overhead}
-
-Execute the same workload with:
-
--   profiling disabled;
--   MLflow autotracing only;
--   MLflow plus metrics scraper;
--   full SGLang request tracing;
--   source-level cache instrumentation.
-
-Report the overhead rather than assuming it is negligible. A reasonable target for the normal application-level profiler is below roughly 5% latency overhead, but the measured value should decide whether the design is acceptable.
-
-
-## Initial experimental matrix {#initial-experimental-matrix}
-
-
-### Experiment A: Prefix caching enabled versus disabled {#experiment-a-prefix-caching-enabled-versus-disabled}
-
-Run the same workflows with:
-
-```text
-radix cache enabled
-radix cache disabled
-```
-
-Use SGLang's `--disable-radix-cache` option for the no-prefix-reuse baseline.
-
-Measure:
-
--   workflow completion time;
--   per-agent TTFT;
--   new prefill tokens;
--   token throughput;
--   reported cache-hit ratio.
-
-This experiment quantifies the total value of prefix caching.
-
-
-### Experiment B: Cold versus warm workflows {#experiment-b-cold-versus-warm-workflows}
-
-For cold-cache execution, restart or explicitly flush the server between workflow runs.
-
-For warm-cache execution, invoke the same workflow repeatedly without clearing the cache.
-
-This reveals:
-
--   cache warm-up time;
--   steady-state cache-hit ratio;
--   which agents benefit after repeated execution;
--   whether benefits stabilize after several runs.
-
-
-### Experiment C: Self-agent reuse {#experiment-c-self-agent-reuse}
-
-Invoke one agent repeatedly while extending its own history:
-
-```text
-Planner turn 1
-Planner turn 2
-Planner turn 3
-```
-
-This isolates reuse caused by an agent's own previous context.
-
-
-### Experiment D: Cross-agent shared prefix {#experiment-d-cross-agent-shared-prefix}
-
-Create controlled prompts where two agents share the same initial prefix:
-
-```text
-[shared application context]
-[shared task description]
-[agent-specific instruction]
-```
-
-Execute Agent A before Agent B and measure Agent B's cached tokens. Then reverse the execution order.
-
-
-### Experiment E: Prompt-layout sensitivity {#experiment-e-prompt-layout-sensitivity}
-
-Compare two prompt layouts.
-
-Agent-first layout:
-
-```text
-You are the planner.
-Large shared document...
-```
-
-Shared-prefix-first layout:
-
-```text
-Large shared document...
-You are the planner.
-```
-
-Both prompts contain the same information, but only the second layout exposes the shared document as a reusable prefix across differently instructed agents.
-
-Measure:
-
--   cached tokens;
--   new prefill tokens;
--   TTFT;
--   workflow latency.
-
-
-### Experiment F: Workflow topology {#experiment-f-workflow-topology}
-
-Compare:
-
-```text
-Sequential:
-Planner -> Executor -> Verifier
-
-Loop:
-Planner -> Executor -> Verifier -> Planner
-
-Branch:
-Planner -> Executor A or Executor B -> Verifier
-
-Parallel:
-Planner -> {Executor A, Executor B} -> Aggregator
-```
-
-The objective is to determine how topology affects temporal reuse distance and cache survival.
-
-
-### Experiment G: Cache pressure {#experiment-g-cache-pressure}
-
-Gradually increase:
-
--   prompt length;
--   number of agents;
--   workflow concurrency;
--   number of distinct workflows.
-
-Observe when cache-hit ratios begin to decline:
-
-```text
-capacity sufficient
-  -> partial eviction
-  -> heavy cache thrashing
-```
-
-
-### Experiment H: Inter-workflow interference {#experiment-h-inter-workflow-interference}
-
-Run Workflow A alone and record its cache behavior. Then run Workflow A concurrently with unrelated Workflow B workloads.
-
-\\[
-\text{interference penalty}
-=
-T<sub>A,\text{concurrent}</sub>
-
--
-
-T<sub>A,\text{isolated}</sub>
-\\]
-
-Also compare A's cached-token ratio under both conditions.
-
-
-### Experiment I: Eviction-policy comparison {#experiment-i-eviction-policy-comparison}
-
-Run identical workloads with each available `--radix-eviction-policy` option:
-
-```text
-lru
-lfu
-slru
-priority
-```
-
-Compare:
-
--   global cache-hit rate;
--   per-agent cache-hit rate;
--   recompute burden;
--   p50 and p95 TTFT;
--   workflow completion time;
--   fairness among workflows.
-
-A globally higher hit rate does not necessarily imply lower workflow completion time.
-
-
-## Analysis and visualizations {#analysis-and-visualizations}
-
-
-### Per-agent summary {#per-agent-summary}
-
-For each agent, calculate:
-
--   request count;
--   mean and median prompt length;
--   mean and median cached tokens;
--   p50, p90, and p95 cache-hit ratio;
--   p50 and p95 TTFT;
--   p50 and p95 end-to-end latency;
--   total newly computed tokens.
-
-
-### Agent-transition matrix {#agent-transition-matrix}
-
-Construct a matrix where rows are previous agents and columns are current agents.
-
-Each cell should contain:
-
--   number of transitions;
--   average cached tokens;
--   average cache-hit ratio;
--   average TTFT;
--   average new prefill tokens.
-
-Example:
-
-| Transition              | Hit ratio | New prefill | TTFT   |
-|-------------------------|-----------|-------------|--------|
-| Planner -&gt; Planner   | 82%       | 410 tokens  | 115 ms |
-| Planner -&gt; Executor  | 56%       | 1180 tokens | 184 ms |
-| Executor -&gt; Verifier | 22%       | 2340 tokens | 301 ms |
-| Verifier -&gt; Planner  | 9%        | 3020 tokens | 372 ms |
-
-
-### Cache reuse versus TTFT {#cache-reuse-versus-ttft}
-
-Plot:
-
-```text
-x-axis: reported cache-hit ratio
-y-axis: TTFT
-color: agent
-```
-
-This reveals whether cache reuse produces similar benefits for all agents.
-
-
-### Prompt tokens versus new prefill tokens {#prompt-tokens-versus-new-prefill-tokens}
-
-Plot:
-
-```text
-x-axis: prompt tokens
-y-axis: new prefill tokens
-```
-
-The distance between the diagonal and each point represents reused work.
-
-
-### Cache pressure curve {#cache-pressure-curve}
-
-Plot:
-
-```text
-x-axis: logical cache utilization
-y-axis: per-agent cache-hit ratio
-```
-
-This reveals which agents are most sensitive to memory pressure.
-
-
-### Workflow critical path {#workflow-critical-path}
-
-Display the LangGraph trace with:
-
--   agent duration;
--   TTFT;
--   cached tokens;
--   new prefill tokens;
--   tool duration.
-
-This shows whether cache optimization would materially shorten the critical path.
-
-
-## Phase 8: Source-level SGLang instrumentation {#phase-8-source-level-sglang-instrumentation}
-
-Application-level profiling answers how much cache was reused. It does not reveal cache provenance or exact eviction behavior.
-
-The next stage is to modify SGLang or extend KVFlow-style metadata paths to emit cache lifecycle events.
-
-Recommended event types:
-
-```text
-prefix_match
-prefix_insert
-cache_access
-cache_lock
-cache_unlock
-cache_evict
-cache_offload
-cache_prefetch_start
-cache_prefetch_complete
-```
-
-Example prefix-match event:
-
-```json
-{
-  "timestamp_ns": 1840000123456,
-  "event": "prefix_match",
-  "request_uuid": "f47c...",
-  "workflow_run_id": "incident-0042-run-01",
-  "agent_id": "planner",
-  "matched_tokens": 3072,
-  "prompt_tokens": 4096,
-  "cache_node_ids": [18, 27, 44]
-}
-```
-
-Example eviction event:
-
-```json
-{
-  "timestamp_ns": 1840000789012,
-  "event": "cache_evict",
-  "cache_node_id": 27,
-  "evicted_tokens": 256,
-  "last_access_request_uuid": "a12b...",
-  "last_access_agent_id": "verifier",
-  "residency_ms": 1832.4
-}
-```
-
-Events should be emitted asynchronously or buffered to minimize scheduler overhead.
-
-
-### Do not assign one permanent owner to a shared cache node {#do-not-assign-one-permanent-owner-to-a-shared-cache-node}
-
-A radix-tree node may be reused by several agents and workflows.
-
-Instead of:
-
-```text
-node.owner = planner
-```
-
-maintain an event history:
-
-```text
-node created by request A
-node accessed by planner
-node accessed by executor
-node accessed by verifier
-node evicted
-```
-
-Offline analysis can reconstruct:
-
--   first creator;
--   most recent accessor;
--   number of accesses by agent;
--   cross-agent reuse count;
--   residency time;
--   reuse distance.
-
-This avoids imposing an incorrect single-owner model on shared cache nodes.
-
-
-### Cache provenance metrics {#cache-provenance-metrics}
-
-With cache-node metadata, calculate:
-
-\\[
-R\_{\text{self}}
-=
-\frac{\text{tokens reused from the same agent}}
-{\text{all cached tokens}}
-\\]
-
-\\[
-R\_{\text{cross-agent}}
-=
-\frac{\text{tokens reused from other agents}}
-{\text{all cached tokens}}
-\\]
-
-\\[
-R\_{\text{cross-workflow}}
-=
-\frac{\text{tokens reused from other workflows}}
-{\text{all cached tokens}}
-\\]
-
-This instrumentation should remain optional because per-node access metadata can introduce substantial overhead.
-
-
-## Integrating SGLang request traces {#integrating-sglang-request-traces}
-
-SGLang can export request traces using OpenTelemetry by enabling `--enable-trace` and configuring `--otlp-traces-endpoint`. This can expose request-stage information around tokenizer and scheduler paths, and SGLang documents extension APIs for adding trace slices.
-
-The first implementation should keep SGLang traces in Jaeger, Phoenix, Grafana Tempo, or another OpenTelemetry backend and correlate them with MLflow through `request_uuid`.
-
-A later implementation can investigate unified distributed tracing:
-
-```text
-MLflow LangGraph span
-  -> propagated trace context
-  -> SGLang request span
-     -> scheduler span
-     -> prefill span
-     -> decode span
-```
-
-MLflow supports distributed tracing through W3C TraceContext headers when both services log to the same tracking server and experiment. However, SGLang's native OpenTelemetry exporter and MLflow's trace ingestion should be validated together before assuming one unified trace. Request-ID correlation is simpler and should be completed first.
-
-
-## Relationship to KVFlow {#relationship-to-kvflow}
-
-KVFlow is relevant because it is explicitly workflow-aware. It models agent execution with an Agent Step Graph, uses steps-to-execution to guide fine-grained cache eviction, and introduces overlapped KV prefetching for agents expected in the next step.
-
-This profiler can reuse the same conceptual direction but focus first on measurement:
-
-```text
-KVFlow-style metadata:
-client_id
-agent_id
-steps_to_execution
-fixed_prompt_boundary
-
-Profiler metadata:
-workflow_run_id
-thread_id
-turn_id
-request_uuid
-MLflow trace_id
-MLflow span_id
-```
-
-Source-level instrumentation can then emit:
-
--   matched prefix length;
--   fixed-prefix hit length;
--   dynamic-suffix hit length;
--   inserted cache tokens;
--   evicted cache tokens;
--   GPU residency time;
--   CPU residency time;
--   prefetch duration.
-
-That would produce more accurate measurements than relying only on OpenAI-compatible response usage.
-
-
-## Privacy and logging safety {#privacy-and-logging-safety}
-
-Prompts, model outputs, tool results, and workflow state may contain sensitive information.
-
-Default policy:
-
--   log identifiers and token counts rather than raw prompt text;
--   use metadata-only SGLang request logging;
--   hash prompt templates when exact content is unnecessary;
--   redact credentials and tool outputs;
--   separate profiling metadata from application data;
--   define trace-retention policy;
--   disable full payload logging in shared deployments;
--   use synthetic data for initial experiments.
-
-The profiler should include a redaction function before any text reaches MLflow.
-
-
-## Reproducibility requirements {#reproducibility-requirements}
-
-Every MLflow run should log:
-
--   source-code commit;
--   dependency lock file;
--   SGLang launch command;
--   model and tokenizer revisions;
--   chat template;
--   workflow graph definition;
--   prompt templates;
--   workload dataset or generation seed;
--   hardware information;
--   server logs;
--   raw request records;
--   sampled server metrics;
--   analysis output.
-
-A benchmark result without its prompt template, model revision, cache configuration, and request order is not fully reproducible.
-
-
-## Milestones {#milestones}
-
-
-### Milestone 1: Basic request profiler {#milestone-1-basic-request-profiler}
-
-Deliverables:
-
--   three-node LangGraph workflow;
--   SGLang cache reporting;
--   MLflow LangGraph traces;
--   per-request JSONL records;
--   cold-versus-warm validation.
-
-
-### Milestone 2: Agent-transition characterization {#milestone-2-agent-transition-characterization}
-
-Deliverables:
-
--   per-agent cache metrics;
--   transition matrix;
--   self-agent and controlled cross-agent experiments;
--   prompt-layout comparison.
-
-
-### Milestone 3: Cache-pressure characterization {#milestone-3-cache-pressure-characterization}
-
-Deliverables:
-
--   concurrency experiments;
--   cache-utilization sampling;
--   interference measurements;
--   eviction-policy comparison.
-
-
-### Milestone 4: Source-level cache events {#milestone-4-source-level-cache-events}
-
-Deliverables:
-
--   prefix-match and insertion events;
--   eviction events;
--   request-level event correlation;
--   event-overhead evaluation.
-
-
-### Milestone 5: Cache provenance {#milestone-5-cache-provenance}
-
-Deliverables:
-
--   self-reuse attribution;
--   cross-agent reuse attribution;
--   cross-workflow reuse attribution;
--   cache-residency analysis.
-
-
-## Development schedule {#development-schedule}
-
-
-### Week 1: Environment and baseline {#week-1-environment-and-baseline}
-
--   deploy MLflow locally;
--   launch SGLang with cache reporting and metrics;
--   build a three-node LangGraph workflow;
--   verify one successful inference request;
--   freeze configurations.
-
-
-### Week 2: Request-level profiler {#week-2-request-level-profiler}
-
--   add workflow and request identifiers;
--   implement manual MLflow inference spans;
--   collect prompt, cached, output, and latency fields;
--   export the canonical request table.
-
-
-### Week 3: Streaming and timing {#week-3-streaming-and-timing}
-
--   add TTFT and TPOT measurement;
--   validate timestamp ordering;
--   measure tracing overhead;
--   add error and cancellation handling.
-
-
-### Week 4: Server metrics {#week-4-server-metrics}
-
--   implement the Prometheus scraper;
--   record logical cache utilization;
--   join server time series with request intervals;
--   create initial MLflow artifacts and plots.
-
-
-### Week 5: Controlled experiments {#week-5-controlled-experiments}
-
--   cold versus warm cache;
--   self-agent reuse;
--   cross-agent reuse;
--   prompt reordering;
--   workflow interleaving.
-
-
-### Week 6: Cache pressure and concurrency {#week-6-cache-pressure-and-concurrency}
-
--   vary cache capacity;
--   vary workflow concurrency;
--   construct agent-transition matrices;
--   identify workload regimes with eviction pressure.
-
-
-### Week 7: Source-level instrumentation {#week-7-source-level-instrumentation}
-
--   add prefix-match, insertion, and eviction events;
--   propagate application identifiers into SGLang;
--   measure instrumentation overhead.
-
-
-### Week 8: Analysis and report {#week-8-analysis-and-report}
-
--   finalize datasets;
--   generate plots;
--   document limitations;
--   compare findings with KVFlow;
--   prepare the research report or paper outline.
-
-
-## Minimum viable profiler {#minimum-viable-profiler}
-
-The minimum viable profiler is complete when it can:
-
-1.  display a LangGraph workflow as an MLflow trace;
-2.  identify every agent and model invocation;
-3.  report prompt tokens and cached tokens for every request;
-4.  calculate newly computed prompt tokens and reported cache-hit ratio;
-5.  measure TTFT and end-to-end latency;
-6.  group traces by workflow thread;
-7.  export one canonical request table;
-8.  compare cold-cache and warm-cache experiments;
-9.  generate per-agent and transition-level summaries;
-10. reproduce results from a saved configuration.
-
-Eviction provenance, cache-node residency, and CPU-GPU cache movement are not requirements for the minimum viable version.
-
-
-## Expected outcome {#expected-outcome}
-
-The first outcome should be a characterization dataset rather than a new cache policy.
-
-That dataset should reveal:
-
--   which agents generate the largest prompts;
--   which agents obtain the most cache reuse;
--   which transitions share token prefixes;
--   which prompt layouts reduce reuse;
--   when cache pressure begins to degrade performance;
--   whether global cache metrics hide agent-level imbalance;
--   how cache reuse affects total workflow completion time.
-
-After these behaviors are understood, the same platform can support later work on:
-
--   workflow-aware eviction;
--   agent-aware cache priorities;
--   cache prefetching;
--   cache compression;
--   RL-based cache management;
--   replica-affinity routing;
--   prompt-layout optimization.
-
-
-## Conclusion {#conclusion}
-
-LangGraph, SGLang, and MLflow provide complementary components for agent-specific KV-cache profiling.
-
-LangGraph supplies the logical workflow structure. SGLang supplies prefix-cache behavior and inference timing. MLflow supplies trace organization, experiment tracking, custom metadata, artifacts, and reproducible comparison.
-
-The implementation should begin with per-request cached-token reporting, client-side timing, and application-side identifiers. It should then add server-level cache pressure and, only after those measurements are validated, extend SGLang or KVFlow with cache lifecycle and provenance events.
-
-This staged approach minimizes engineering risk while producing useful results early. It also prevents the project from prematurely optimizing cache policies before the underlying multi-agent workload has been accurately characterized.
+Prompt instrumentation helps distinguish cache misses caused by prompt layout from misses caused by eviction, cache pressure, or backend scheduling.
 
 
 ## Reference List {#reference-list}
@@ -1855,4 +1221,6 @@ This staged approach minimizes engineering risk while producing useful results e
 7.  <https://docs.sglang.io/docs/references/production_metrics>
 8.  <https://docs.sglang.io/docs/references/production_request_trace>
 9.  <https://arxiv.org/abs/2507.07400>
-10. <https://opentelemetry.io/docs/concepts/context-propagation/>
+10. <https://github.com/PanZaifeng/KVFlow>
+11. <https://arxiv.org/abs/2407.06985>
+12. <https://opentelemetry.io/docs/concepts/context-propagation/>
