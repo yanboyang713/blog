@@ -1,0 +1,8 @@
+---
+title: "Test-Time Training (TTT)"
+draft: false
+---
+
+## Reference List {#reference-list}
+
+1.  <https://mp.weixin.qq.com/s?__biz=Mzg5MTkxNjQwMw==&mid=2247494470&idx=1&sn=9e6e21c0eaea5ede88ddde2fcf7ca564&chksm=cfc4b25af8b33b4c71c03560ea3031521cc20dabe87d1d2224524609a7be87c4ac24a5a1b145&mpshare=1&scene=1&srcid=071009v1P71csPTBCmkH1axN&sharer_shareinfo=83787b73ec142e2dfcbef5b415ce8946&sharer_shareinfo_first=83787b73ec142e2dfcbef5b415ce8946&exportkey=n_ChQIAhIQ2C2bHFrdM%2FmMLxlO19YFNRKcAgIE97dBBAEAAAAAABgZFfWS9k8AAAAOpnltbLcz9gKNyK89dVj0MOJeInj%2BD2DCCGzg1klrr2Nl5%2Bd%2FiFvSgtOTp%2BT2WV0g09S6VihPrZI6f6XPoQ4UGo86GhGeFGOYN7EXXlu%2FezyLObbqcXkDz2bXok6PHCqVe2yUV4Fd7nTcZXsRI260ChgRJJNmXaRNuWaSHNiqDb92L2wdaY1BuRDdHs4n%2BNMMhhaHvCBBmDL%2FISFj%2Fe2pKM8IvtX7dJqnYDSPbQvhKW30xjCXdU1slCDuJA7OjiCHI1MUugHmOKSZuDzDsgrZkCU5H6j%2BP9RMoHluHc6BbDYYs9VeIyoSo1FSP1KNwNMXjvrJzeWmkbM%2BxHImFJLe%2F53dlTm%2F&acctmode=0&pass_ticket=09dCzYCgWyCS6nAOi4f42Xvz%2BWI8%2F6qG1N45mF%2FpYl09CS6H3aTzPv%2BpW1K3TiSy&wx_header=0#rd>
