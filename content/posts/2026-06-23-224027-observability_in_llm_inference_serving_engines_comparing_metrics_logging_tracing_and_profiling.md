@@ -230,7 +230,7 @@ Extensibility matters most when built-in metrics are not specific enough to expl
 | mini-SGLang             | Minimal production telemetry, but realistic serving features                           | Mostly whatever the researcher adds                                               | Custom                                                                | Very high; compact SGLang-style codebase                    | Teaching, scheduler/cache research                     |
 
 
-### vLLM {#vllm}
+### [vLLM]({{< relref "2025-04-22-085318-vllm.md" >}}) {#vllm--2025-04-22-085318-vllm-dot-md}
 
 vLLM is one of the strongest general-purpose choices when production monitoring and serving-specific performance debugging are both required.
 

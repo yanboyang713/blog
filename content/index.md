@@ -16,6 +16,8 @@ title: Welcome to Boyang Yan's Website
 ---
 
 ## Areas of Interest
+- Data Analytic
+- Cloud Operational Analytics
 - [Computer Networks](posts/2024-05-24-034608-networking)
 - [Networked Systems](posts/2026-01-03-223923-networked_systems)
 - [Anomaly Detection](posts/20230404190313-anomaly_detection)
@@ -25,11 +27,11 @@ title: Welcome to Boyang Yan's Website
 ---
 
 ## Summary
-My research interests spans computer networks and distributed systems, with an emphasis on [network measurement](posts/2025-11-05-041036-network_measurement), [anomaly detection](posts/20230404190313-anomaly_detection), [root-cause analysis](posts/2025-04-22-090350-root_cause_analysis), and [cloud computing](posts/2023-10-09-180437-cloud_computing). I develop data-driven methods to improve the cost-effectiveness, reliability, and performance of modern networked systems. My current work focuses on self-driving [cellular networks](posts/20230614221419-cellular_network), leveraging [small language models](posts/2025-11-04-233701-small_language_models_slms) and [time-series analysis](posts/20230404184340-time_series) for closed-loop monitoring and control.
+Computer Science Ph.D. student with four years of industry experience spanning data analytics, Azure cloud infrastructure, MLOps, distributed systems, and computer networks. I have experience applying engineering and statistical methods to improve the cost efficiency, reliability, and performance of cloud and networked systems. My hands-on background includes Azure ML, Kubernetes/OpenShift, Proxmox, NFV, P4 programmable networking, O-RAN, time-series [anomaly detection](posts/20230404190313-anomaly_detection), workload prediction, and data-driven [root-cause analysis](posts/2025-04-22-090350-root_cause_analysis). My current research focuses on self-driving [cellular networks](posts/20230614221419-cellular_network), leveraging [small language models](posts/2025-11-04-233701-small_language_models_slms) and [time-series analysis](posts/20230404184340-time_series) for closed-loop monitoring and control.
 
-I hold an M.S. in Statistics and Operations Research from [RMIT University (Royal Melbourne Institute of Technology)](https://www.rmit.edu.au/), Australia, and a B.S. in Computer Science from the [University of Wollongong](https://www.uow.edu.au/), Australia. I bring a strong background in network systems engineering, reinforced by hands-on experience in cloud infrastructure, [time-series analysis](posts/20230404184340-time_series), and [software-defined networking](posts/2025-04-10-011054-software_defined_networking_sdn). Before academia, I worked in industry, including with Microsoft Azure and at Peng Cheng Laboratory.
+I hold an M.S. in Statistics and Operations Research from [RMIT University (Royal Melbourne Institute of Technology)](https://www.rmit.edu.au/) in Australia and a B.S. in Computer Science from the [University of Wollongong](https://www.uow.edu.au/) in Australia. Before entering academia, I worked in industry, including roles with Microsoft Azure and Peng Cheng Laboratory, where I developed a strong foundation in cloud infrastructure, network systems engineering, [time-series analysis](posts/20230404184340-time_series), and [software-defined networking](posts/2025-04-10-011054-software_defined_networking_sdn).
 
-I’m passionate about exploring new technologies and methodologies and eager to tackle hard problems in uncharted territory.
+I am passionate about exploring emerging technologies and methodologies, and I am eager to tackle challenging problems in new and rapidly evolving areas.
 
 ---
 
